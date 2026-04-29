@@ -23,28 +23,31 @@
     </div>
 
     <script>
-        async function send() {
-            const input = document.getElementById('input');
-            const chat = document.getElementById('chat');
-            if(!input.value) return;
+async function send() {
+    const input = document.getElementById('input');
+    const chat = document.getElementById('chat');
+    if(!input.value) return;
 
-            const userText = input.value;
-            chat.innerHTML += `<div class="msg user">${userText}</div>`;
-            input.value = '';
-            chat.scrollTop = chat.scrollHeight;
+    const userText = input.value;
+    chat.innerHTML += `<div class="msg user">${userText}</div>`;
+    input.value = '';
+    chat.scrollTop = chat.scrollHeight;
 
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    body: JSON.stringify({ prompt: userText })
-                });
-                const data = await response.json();
-                chat.innerHTML += `<div class="msg bot">${data.text}</div>`;
-            } catch (e) {
-                chat.innerHTML += `<div class="msg bot" style="color:red;">Error: No se pudo conectar.</div>`;
-            }
-            chat.scrollTop = chat.scrollHeight;
-        }
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userText })
+        });
+        const data = await response.json();
+        // Verificamos que 'text' exista antes de mostrarlo
+        const botText = data.text || "La IA no ha podido generar una respuesta ahora mismo.";
+        chat.innerHTML += `<div class="msg bot">${botText}</div>`;
+    } catch (e) {
+        chat.innerHTML += `<div class="msg bot" style="color:red;">Error de conexión.</div>`;
+    }
+    chat.scrollTop = chat.scrollHeight;
+}
     </script>
 </body>
 </html>
