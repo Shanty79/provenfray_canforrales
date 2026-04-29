@@ -2,16 +2,43 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cargando Proyecto IA...</title>
-    <script>
-        // Cambia la dirección de la ventana principal para evitar el bloqueo del iFrame
-        window.location.replace("https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/");
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Bádminton Infantil</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
     </script>
 </head>
-<body style="background-color: #f0f2f5; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
-    <div style="text-align: center;">
-        <p>Redirigiendo a la aplicación de IA...</p>
-        <small>Si no carga, <a href="https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/">haz clic aquí</a>.</small>
-    </div>
+<body style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px;">
+    <h2>🏸 Entrenador Bádminton</h2>
+    <div id="chat-history" style="height: 300px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; margin-bottom: 10px;"></div>
+    <input type="text" id="user-input" style="width: 80%;" placeholder="Pregunta por un entrenamiento...">
+    <button onclick="sendMessage()">Enviar</button>
+
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+
+      // Nota: Para que esto sea 100% seguro sin backend, 
+      // lo ideal es usar la función de Vercel, pero para probar:
+      const API_KEY = "AIzaSyAkQmDj1KXIUnC3-AVQSY7upjuIBunkETc"; 
+      const genAI = new GoogleGenerativeAI(API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+      window.sendMessage = async () => {
+        const input = document.getElementById('user-input');
+        const history = document.getElementById('chat-history');
+        const userText = input.value;
+        
+        history.innerHTML += `<p><b>Tú:</b> ${userText}</p>`;
+        input.value = '';
+
+        const result = await model.generateContent(`Eres un experto en bádminton para niños. ${userText}`);
+        const response = await result.response;
+        history.innerHTML += `<p><b>IA:</b> ${response.text()}</p>`;
+      }
+    </script>
 </body>
 </html>
