@@ -3,110 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club Canforrales - Gestión de Torneos</title>
+    <title>Club de Bádminton Canforrales</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
+        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; background: #f0f2f5; }
+        .top-bar { background: #28a745; color: white; padding: 15px; text-align: center; font-weight: bold; }
+        .main-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .btn-principal { background: #007bff; color: white; padding: 20px 40px; text-decoration: none; border-radius: 12px; font-size: 20px; font-weight: bold; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
-        /* La gestión de torneos ocupa TODA la pantalla */
-        .iframe-container { width: 100%; height: 100vh; border: none; }
-
-        /* Botón flotante para abrir el chat */
-        .chat-launcher {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-
-        /* Ventana del chat (oculta por defecto) */
-        .chat-window {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: 350px;
-            height: 450px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            display: none; /* Se activa con JS */
-            flex-direction: column;
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .chat-header { background: #28a745; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
-        #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; }
-        .input-area { display: flex; padding: 10px; border-top: 1px solid #eee; gap: 5px; }
-        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
-        .btn-send { background: #28a745; border: none; color: white; padding: 10px; border-radius: 5px; cursor: pointer; }
-        .msg { padding: 8px 12px; border-radius: 10px; font-size: 14px; max-width: 85%; }
-        .bot { background: #e9f5ff; align-self: flex-start; }
+        /* Chat Flotante */
+        #chat-widget { position: fixed; bottom: 20px; right: 20px; width: 350px; height: 450px; background: white; border-radius: 15px; display: none; flex-direction: column; box-shadow: 0 5px 25px rgba(0,0,0,0.2); z-index: 1000; overflow: hidden; }
+        .chat-header { background: #28a745; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        #chat-content { flex: 1; padding: 15px; overflow-y: auto; background: #f8f9fa; display: flex; flex-direction: column; gap: 10px; }
+        .input-box { display: flex; padding: 10px; border-top: 1px solid #eee; }
+        .input-box input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
+        .launch-btn { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .msg { padding: 8px 12px; border-radius: 10px; font-size: 14px; max-width: 80%; }
+        .bot { background: #e9ecef; align-self: flex-start; }
         .user { background: #28a745; color: white; align-self: flex-end; }
     </style>
 </head>
 <body>
 
-    <iframe class="iframe-container" src="https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/"></iframe>
+    <div class="top-bar">CANFORRALES - ÁREA DE GESTIÓN</div>
 
-    <div class="chat-launcher" onclick="toggleChat()">🏸</div>
+    <div class="main-view">
+        <a href="https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/" target="_self" class="btn-principal">
+            🏆 ENTRAR A GESTIÓN DE TORNEOS
+        </a>
+        <p style="color: #666;">Haz clic arriba para gestionar el calendario y rankings</p>
+    </div>
 
-    <div class="chat-window" id="chatWindow">
+    <button class="launch-btn" id="openBtn" onclick="toggleChat()">🏸</button>
+
+    <div id="chat-widget">
         <div class="chat-header">
-            <span>Asistente del Club</span>
-            <span style="cursor:pointer" onclick="toggleChat()">✖</span>
+            <span>Entrenador IA</span>
+            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
         </div>
-        <div id="chat-box">
-            <div class="msg bot">¡Hola! Soy tu asistente. ¿En qué puedo ayudarte?</div>
+        <div id="chat-content">
+            <div class="msg bot">¡Hola! Soy tu asistente. Pulsa el botón azul para los torneos o pregúntame dudas aquí.</div>
         </div>
-        <div class="input-area">
+        <div class="input-box">
             <input type="text" id="userInput" placeholder="Pregunta algo...">
-            <button class="btn-send" onclick="enviar()">Enviar</button>
+            <button onclick="enviar()" style="background:none; border:none; color:#28a745; font-weight:bold; cursor:pointer; margin-left:5px;">Ir</button>
         </div>
     </div>
 
     <script>
         function toggleChat() {
-            const win = document.getElementById('chatWindow');
-            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+            const chat = document.getElementById('chat-widget');
+            const btn = document.getElementById('openBtn');
+            const isVisible = chat.style.display === 'flex';
+            chat.style.display = isVisible ? 'none' : 'flex';
+            btn.style.display = isVisible ? 'flex' : 'none';
         }
 
         async function enviar() {
             const input = document.getElementById('userInput');
-            const box = document.getElementById('chat-box');
-            if(!input.value.trim()) return;
+            const content = document.getElementById('chat-content');
+            if (!input.value.trim()) return;
 
-            const prompt = input.value;
-            box.innerHTML += `<div class="msg user">${prompt}</div>`;
+            const text = input.value;
+            content.innerHTML += `<div class="msg user">${text}</div>`;
             input.value = '';
-            box.scrollTop = box.scrollHeight;
+            content.scrollTop = content.scrollHeight;
 
             try {
-                // He cambiado la lógica interna para que use /api/chat que ya tienes
-                const response = await fetch('/api/chat', {
+                const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: prompt })
+                    body: JSON.stringify({ prompt: text })
                 });
-                const data = await response.json();
-                box.innerHTML += `<div class="msg bot"><b>Asistente:</b> ${data.text}</div>`;
+                const data = await res.json();
+                content.innerHTML += `<div class="msg bot"><b>Asistente:</b> ${data.text}</div>`;
             } catch (e) {
-                box.innerHTML += `<div style="color:red; font-size:12px; text-align:center;">Error de conexión.</div>`;
+                content.innerHTML += `<div class="msg bot" style="color:red;">Error de conexión.</div>`;
             }
-            box.scrollTop = box.scrollHeight;
+            content.scrollTop = content.scrollHeight;
         }
-
-        document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') enviar(); });
     </script>
 </body>
 </html>
