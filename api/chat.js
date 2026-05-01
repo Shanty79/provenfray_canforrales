@@ -3,11 +3,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 module.exports = async (req, res) => {
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-  // USAMOS EL MODELO DE 500 MENSAJES (Gemini 3.1 Flash Lite)
-  // Forzamos apiVersion: 'v1' para que no de error 404
+  // ESTE ES EL MODELO QUE TIENE LOS 1.500 MENSAJES (1.5K RPD)
+  // Usamos el ID técnico 'gemini-2.5-pro' y la versión 'v1beta'
   const model = genAI.getGenerativeModel(
-    { model: "gemini-3.1-flash-lite" },
-    { apiVersion: 'v1' }
+    { model: "gemini-2.5-pro" },
+    { apiVersion: 'v1beta' }
   );
 
   const userPrompt = req.body.prompt || req.body.message || "Hola";
@@ -22,12 +22,9 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error("Error detallado:", error);
     
-    // Mensaje amigable si fallara algo
-    let mensaje = "Fray-Smash está recogiendo los volantes... (Error de conexión)";
-    if (error.message.includes("429")) {
-      mensaje = "¡Increíble! Hemos agotado los 500 entrenamientos de hoy. Fray-Smash tiene que descansar.";
-    }
-
-    res.status(200).json({ text: mensaje });
+    // Si este falla, el error nos dirá el nombre exacto que falta
+    res.status(200).json({ 
+      text: "Fray-Smash está ajustando la tensión de la raqueta... (Error: " + error.message + ")" 
+    });
   }
 };
