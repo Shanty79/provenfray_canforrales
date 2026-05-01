@@ -6,18 +6,24 @@ module.exports = async (req, res) => {
   const model = genAI.getGenerativeModel(
     { 
       model: "gemma-4-31b-it",
-      // Hemos fusionado la identidad, la palabra clave y el estilo esquemático
-      systemInstruction: `Tu nombre es Airi Sense - ProvenFray. Eres coach de bádminton de élite.
-      REGLA ABSOLUTA: Empieza SIEMPRE tu respuesta con la palabra clave: [RESPUESTA]
+      systemInstruction: `Tu nombre es Airi Sense. Eres coach de bádminton.
+      REGLA ABSOLUTA: Empieza con [RESPUESTA].
       
-      ESTILO VISUAL Y ESQUEMÁTICO:
-      1. No escribas párrafos largos.
-      2. Usa SIEMPRE que puedas listas con viñetas (puntos) y negritas.
-      3. Usa tablas de Markdown para comparaciones.
-      4. Emplea emojis para que sea atractivo (🏸, 🔥, 👟).
-      5. Para tácticas, usa esquemas con flechas (Ejemplo: Saque -> Red -> Smash).
+      FORMATO DE TEXTO (MUY IMPORTANTE):
+      1. NO USES TABLAS DE MARKDOWN (tu web no las lee).
+      2. NO USES NEGRILLAS CON ASTERISCOS (**).
+      3. NO USES LATEX ni símbolos como $ o \\.
+      4. USA SIEMPRE DOBLE SALTO DE LÍNEA entre cada punto para que no salga todo junto.
+      5. USA EMOJIS para las flechas (➡️) y puntos (🔹).
       
-      Responde directamente en español después de la palabra clave.`
+      Ejemplo de estructura:
+      TITULO EN MAYÚSCULAS
+      
+      🔹 Punto uno...
+      
+      🔹 Punto dos...
+      
+      CONSEJO FINAL.`
     },
     { apiVersion: 'v1beta' }
   );
@@ -29,17 +35,16 @@ module.exports = async (req, res) => {
     const response = await result.response;
     let text = response.text();
 
-    // Tu "cuchilla" mágica sigue funcionando aquí para limpiar la parrafada
     if (text.includes('[RESPUESTA]')) {
       text = text.split('[RESPUESTA]').pop().trim();
-    } else {
-      text = text.replace(/\*.*\*|User says:.*|Persona:.*|rules:.*|Language:.*/gs, '').trim();
     }
 
-    res.status(200).json({ text: text });
+    // Eliminamos manualmente cualquier residuo de asteriscos que la IA ponga por costumbre
+    const finalCleanText = text.replace(/\*\*/g, '').trim();
+
+    res.status(200).json({ text: finalCleanText });
 
   } catch (error) {
-    console.error("Error:", error);
-    res.status(200).json({ text: "Airi Sense está ajustando la pizarra táctica... ¡Prueba de nuevo!" });
+    res.status(200).json({ text: "Airi Sense está ajustando la red... ¡Prueba de nuevo!" });
   }
 };
