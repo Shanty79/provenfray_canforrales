@@ -1,30 +1,24 @@
 module.exports = async (req, res) => {
   const apiKey = process.env.GOOGLE_API_KEY;
-
-  // Esto asegura que siempre haya una pregunta
   const userPrompt = req.body.prompt || req.body.message || "Hola, preséntate";
 
   try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ 
-              parts: [{ 
-                text: "Eres Fray-Smash, entrenador de bádminton. Responde a: " + userPrompt 
-              }] 
-            }]
-          })
-        }
-);
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ 
+            parts: [{ text: "Eres Fray-Smash, entrenador de bádminton. Responde a: " + userPrompt }] 
+          }]
+        })
+      }
     );
 
     const data = await response.json();
 
     if (!response.ok) {
-      // Si Google da error, ahora sabremos EXACTAMENTE cuál es
       return res.status(200).json({ text: "Google dice: " + (data.error?.message || "Error desconocido") });
     }
 
@@ -32,6 +26,6 @@ module.exports = async (req, res) => {
     res.status(200).json({ text: resultText });
 
   } catch (error) {
-    res.status(200).json({ text: "Error crítico de conexión en el servidor." });
+    res.status(200).json({ text: "Error de conexión: " + error.message });
   }
-}
+};
