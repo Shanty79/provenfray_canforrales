@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
   // Seleccionamos el modelo Gemini 2.0 Flash (el mismo que te funciona en AI Studio)
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   // Capturamos lo que el usuario escribe en tu web
   const userPrompt = req.body.prompt || req.body.message || "Hola";
