@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
   try {
     const response = await fetch(
       // Usamos el modelo 2.0 que te funcionó en el Studio
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
