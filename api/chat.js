@@ -1,32 +1,28 @@
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 module.exports = async (req, res) => {
-  const apiKey = process.env.GOOGLE_API_KEY;
+  // Inicializamos la IA con tu clave (la que configuraste en Vercel)
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+
+  // Seleccionamos el modelo Gemini 2.0 Flash (el mismo que te funciona en AI Studio)
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+  // Capturamos lo que el usuario escribe en tu web
   const userPrompt = req.body.prompt || req.body.message || "Hola";
 
   try {
-    const response = await fetch(
-      // Usamos el modelo 2.0 que te funcionó en el Studio
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ 
-            parts: [{ text: "Eres Fray-Smash, entrenador de bádminton. Responde: " + userPrompt }] 
-          }]
-        })
-      }
-    );
+    // Generamos la respuesta con la personalidad de Fray-Smash
+    const result = await model.generateContent("Eres Fray-Smash, entrenador de bádminton. Responde: " + userPrompt);
+    const response = await result.response;
+    const text = response.text();
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(200).json({ text: "Error de Google: " + (data.error?.message || "Revisa el modelo") });
-    }
-
-    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No hay respuesta.";
-    res.status(200).json({ text: resultText });
+    // Enviamos la respuesta de vuelta a tu página web
+    res.status(200).json({ text: text });
 
   } catch (error) {
-    res.status(200).json({ text: "Error de red: " + error.message });
+    console.error("Error detallado:", error);
+    res.status(200).json({ 
+      text: "Fray-Smash tiene un problema de conexión: " + error.message 
+    });
   }
 };
