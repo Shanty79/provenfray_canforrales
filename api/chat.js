@@ -3,9 +3,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 module.exports = async (req, res) => {
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-  // Usamos Gemini 2.5, que es el que te da 1500 peticiones gratis según tu panel
+  // USAMOS EL MODELO DE 500 MENSAJES (Gemini 3.1 Flash Lite)
+  // Forzamos apiVersion: 'v1' para que no de error 404
   const model = genAI.getGenerativeModel(
-    { model: "gemini-2.5" }
+    { model: "gemini-3.1-flash-lite" },
+    { apiVersion: 'v1' }
   );
 
   const userPrompt = req.body.prompt || req.body.message || "Hola";
@@ -18,13 +20,14 @@ module.exports = async (req, res) => {
     res.status(200).json({ text: text });
 
   } catch (error) {
-    console.error("Error en Fray-Smash:", error);
+    console.error("Error detallado:", error);
     
-    // Si llegas al límite de 1500, este mensaje te lo confirmará
-    const mensajeError = error.message.includes("429") 
-      ? "¡Uff! Hemos agotado los 1.500 entrenamientos de hoy. Fray-Smash necesita descansar."
-      : "Error de conexión: " + error.message;
+    // Mensaje amigable si fallara algo
+    let mensaje = "Fray-Smash está recogiendo los volantes... (Error de conexión)";
+    if (error.message.includes("429")) {
+      mensaje = "¡Increíble! Hemos agotado los 500 entrenamientos de hoy. Fray-Smash tiene que descansar.";
+    }
 
-    res.status(200).json({ text: mensajeError });
+    res.status(200).json({ text: mensaje });
   }
 };
