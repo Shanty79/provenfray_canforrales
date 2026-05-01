@@ -1,7 +1,7 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   const apiKey = process.env.GOOGLE_API_KEY;
-  
-  // Esto asegura que siempre haya una pregunta, aunque el formulario falle
+
+  // Esto asegura que siempre haya una pregunta
   const userPrompt = req.body.prompt || req.body.message || "Hola, preséntate";
 
   try {
