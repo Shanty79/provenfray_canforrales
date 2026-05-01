@@ -1,13 +1,11 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 module.exports = async (req, res) => {
+  // Usamos la nueva API KEY que has generado
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-  // FORZAMOS LA VERSIÓN 'v1' PARA EL MODELO 1.5 FLASH
-  const model = genAI.getGenerativeModel(
-    { model: "gemini-1.5-flash" },
-    { apiVersion: 'v1' } 
-  );
+  // IMPORTANTE: Usamos el modelo que aparece en tu panel de control
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const userPrompt = req.body.prompt || req.body.message || "Hola";
 
@@ -19,9 +17,12 @@ module.exports = async (req, res) => {
     res.status(200).json({ text: text });
 
   } catch (error) {
-    console.error("Error detallado:", error);
-    res.status(200).json({ 
-      text: "Fray-Smash sigue con problemas: " + error.message 
-    });
+    console.error("Error en Fray-Smash:", error);
+    // Si da error 429, avisamos que es por la cuota de Google
+    const msg = error.message.includes("429") 
+      ? "Google me tiene en el banquillo por exceso de peticiones. Intenta en un minuto." 
+      : error.message;
+      
+    res.status(200).json({ text: "Fray-Smash dice: " + msg });
   }
 };
