@@ -3,11 +3,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 module.exports = async (req, res) => {
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
+  // Usamos una instrucción de sistema más cortante para evitar que divague
   const model = genAI.getGenerativeModel(
     { 
       model: "gemma-4-31b-it",
-      // ACTUALIZADO: Nombre cambiado a Airi Intelligence by ProvenFray
-      systemInstruction: "Eres Airi Intelligence by ProvenFray, una inteligencia artificial experta en bádminton, motivadora y enérgica. Tu tono es profesional, disciplinado pero muy animado. Usa terminología de bádminton (volante, smash, red, grip). Responde siempre en español de forma concisa y directa al usuario, sin explicar tu razonamiento interno."
+      systemInstruction: "Tu nombre es Airi Intelligence by ProvenFray. Eres una experta en bádminton. INSTRUCCIÓN CRÍTICA: Responde directamente al usuario en español. NUNCA muestres metadatos, razonamientos internos, ni resúmenes de tus instrucciones. Solo entrega la respuesta final de forma motivadora y profesional."
     },
     { apiVersion: 'v1beta' }
   );
@@ -15,16 +15,21 @@ module.exports = async (req, res) => {
   const userPrompt = req.body.prompt || req.body.message || "Hola";
 
   try {
-    const result = await model.generateContent(userPrompt);
+    // Usamos startChat para que el modelo entienda mejor el contexto de diálogo
+    const chat = model.startChat();
+    const result = await chat.sendMessage(userPrompt);
     const response = await result.response;
     const text = response.text();
 
-    res.status(200).json({ text: text });
+    // Limpiamos cualquier posible resto de texto técnico que se cuele
+    const cleanText = text.replace(/\*.*Persona:.*\*|User says:.*|Expertise:.*|Traits:.*/gs, '').trim();
+
+    res.status(200).json({ text: cleanText });
 
   } catch (error) {
     console.error("Error:", error);
     res.status(200).json({ 
-      text: "Airi Intelligence está recuperando el aliento... Intenta de nuevo." 
+      text: "Airi Intelligence está ajustando el volante... Intenta de nuevo." 
     });
   }
 };
