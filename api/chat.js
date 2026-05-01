@@ -3,11 +3,10 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 module.exports = async (req, res) => {
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-  // Usamos una instrucción de sistema más cortante para evitar que divague
   const model = genAI.getGenerativeModel(
     { 
       model: "gemma-4-31b-it",
-      systemInstruction: "Tu nombre es Airi Intelligence by ProvenFray. Eres una experta en bádminton. INSTRUCCIÓN CRÍTICA: Responde directamente al usuario en español. NUNCA muestres metadatos, razonamientos internos, ni resúmenes de tus instrucciones. Solo entrega la respuesta final de forma motivadora y profesional."
+      systemInstruction: "Eres Airi Sense · ProvenFray, una experta entrenadora de bádminton. Tu tono es motivador, profesional y enérgico. Responde directamente al usuario en español, de forma concisa y usando términos de bádminton. No incluyas metadatos ni introducciones técnicas."
     },
     { apiVersion: 'v1beta' }
   );
@@ -15,21 +14,18 @@ module.exports = async (req, res) => {
   const userPrompt = req.body.prompt || req.body.message || "Hola";
 
   try {
-    // Usamos startChat para que el modelo entienda mejor el contexto de diálogo
-    const chat = model.startChat();
-    const result = await chat.sendMessage(userPrompt);
+    // Usamos generateContent simple, que es más estable para respuestas directas
+    const result = await model.generateContent(userPrompt);
     const response = await result.response;
     const text = response.text();
 
-    // Limpiamos cualquier posible resto de texto técnico que se cuele
-    const cleanText = text.replace(/\*.*Persona:.*\*|User says:.*|Expertise:.*|Traits:.*/gs, '').trim();
-
-    res.status(200).json({ text: cleanText });
+    // Enviamos el texto tal cual llega, confiando en la nueva instrucción
+    res.status(200).json({ text: text });
 
   } catch (error) {
     console.error("Error:", error);
     res.status(200).json({ 
-      text: "Airi Intelligence está ajustando el volante... Intenta de nuevo." 
+      text: "Airi Sense · ProvenFray está ajustando la red... ¡Prueba de nuevo!" 
     });
   }
 };
