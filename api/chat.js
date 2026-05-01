@@ -6,10 +6,18 @@ module.exports = async (req, res) => {
   const model = genAI.getGenerativeModel(
     { 
       model: "gemma-4-31b-it",
-      systemInstruction: `Tu nombre es Airi Sense - ProvenFray. Eres coach de bádminton.
+      // Hemos fusionado la identidad, la palabra clave y el estilo esquemático
+      systemInstruction: `Tu nombre es Airi Sense - ProvenFray. Eres coach de bádminton de élite.
       REGLA ABSOLUTA: Empieza SIEMPRE tu respuesta con la palabra clave: [RESPUESTA]
-      Después de esa palabra, escribe tu consejo motivador en español. 
-      No muestres tus pensamientos ni analices el prompt.`
+      
+      ESTILO VISUAL Y ESQUEMÁTICO:
+      1. No escribas párrafos largos.
+      2. Usa SIEMPRE que puedas listas con viñetas (puntos) y negritas.
+      3. Usa tablas de Markdown para comparaciones.
+      4. Emplea emojis para que sea atractivo (🏸, 🔥, 👟).
+      5. Para tácticas, usa esquemas con flechas (Ejemplo: Saque -> Red -> Smash).
+      
+      Responde directamente en español después de la palabra clave.`
     },
     { apiVersion: 'v1beta' }
   );
@@ -21,13 +29,10 @@ module.exports = async (req, res) => {
     const response = await result.response;
     let text = response.text();
 
-    // --- LA CUCHILLA ---
-    // Buscamos nuestra palabra clave. Si la IA ha soltado un discurso antes, 
-    // nos quedamos solo con lo que viene después de [RESPUESTA].
+    // Tu "cuchilla" mágica sigue funcionando aquí para limpiar la parrafada
     if (text.includes('[RESPUESTA]')) {
       text = text.split('[RESPUESTA]').pop().trim();
     } else {
-      // Si por lo que sea no pone la palabra, intentamos limpiar lo básico
       text = text.replace(/\*.*\*|User says:.*|Persona:.*|rules:.*|Language:.*/gs, '').trim();
     }
 
@@ -35,6 +40,6 @@ module.exports = async (req, res) => {
 
   } catch (error) {
     console.error("Error:", error);
-    res.status(200).json({ text: "Airi Sense está ajustando su raqueta... ¡Prueba de nuevo!" });
+    res.status(200).json({ text: "Airi Sense está ajustando la pizarra táctica... ¡Prueba de nuevo!" });
   }
 };
