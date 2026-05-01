@@ -6,7 +6,9 @@ module.exports = async (req, res) => {
   const model = genAI.getGenerativeModel(
     { 
       model: "gemma-4-31b-it",
-      systemInstruction: "Eres Airi Sense · ProvenFray, una experta entrenadora de bádminton. Tu tono es motivador, profesional y enérgico. Responde directamente al usuario en español, de forma concisa y usando términos de bádminton. No incluyas metadatos ni introducciones técnicas."
+      systemInstruction: `Tu nombre es Airi Sense - ProvenFray. Eres una coach de bádminton de élite.
+      REGLA CRÍTICA: No expliques tu razonamiento ni des opciones. 
+      Escribe tu respuesta final directamente. No uses etiquetas de metadatos.`
     },
     { apiVersion: 'v1beta' }
   );
@@ -14,18 +16,28 @@ module.exports = async (req, res) => {
   const userPrompt = req.body.prompt || req.body.message || "Hola";
 
   try {
-    // Usamos generateContent simple, que es más estable para respuestas directas
     const result = await model.generateContent(userPrompt);
     const response = await result.response;
-    const text = response.text();
+    let text = response.text();
 
-    // Enviamos el texto tal cual llega, confiando en la nueva instrucción
-    res.status(200).json({ text: text });
+    // --- FILTRO DE LIMPIEZA DEFINITIVO ---
+    // Si la IA se pone a divagar y pone "Option 1", "User says", etc., 
+    // este código intenta quedarse solo con la última frase o la parte más relevante.
+    if (text.includes('Option 3:')) {
+      text = text.split('Option 3:').pop();
+    } else if (text.includes('¡Hola')) {
+       // Si hay varios "¡Hola!", nos quedamos con el último que suele ser la respuesta final
+       const parts = text.split('¡Hola');
+       text = '¡Hola' + parts.pop();
+    }
+    
+    // Limpieza final de posibles asteriscos o restos de etiquetas
+    const cleanText = text.replace(/\* My persona:.*|\* Tone:.*|\* User says:.*/gs, '').trim();
+
+    res.status(200).json({ text: cleanText || "¡Hola! Soy Airi Sense. ¿En qué entrenamos hoy?" });
 
   } catch (error) {
     console.error("Error:", error);
-    res.status(200).json({ 
-      text: "Airi Sense · ProvenFray está ajustando la red... ¡Prueba de nuevo!" 
-    });
+    res.status(200).json({ text: "Airi Sense está analizando la jugada... Intenta de nuevo." });
   }
 };
