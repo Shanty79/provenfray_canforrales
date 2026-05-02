@@ -6,120 +6,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIRI SENSE - PROVENFRAY</title>
     <style>
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: #1a1a1a; display: flex; flex-direction: column; height: 100vh; color: #fff; }
+        :root { --primary: #ffd700; --bg: #1a1a1a; --card: #262626; --text: #eee; }
         
-        /* CABECERA PROVENFRAY */
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: var(--bg); display: flex; flex-direction: column; height: 100vh; color: #fff; overflow: hidden; }
+        
+        /* CABECERA GHOST STYLE */
         .header { 
-            background: #000; 
-            color: #ffd700; 
-            padding: 15px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 3px solid #ffd700;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: #000; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary);
         }
-        .header h1 { margin: 0; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .header h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
         
-        /* BOTÓN TORNEOS */
-        .btn-torneos { 
-            background: #ffd700; 
-            color: #000; 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-weight: 800; 
-            font-size: 0.85rem; 
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-        .btn-torneos:hover { background: #fff; transform: translateY(-2px); }
+        /* Icono Volante Impacto SVG */
+        .icon-shuttle { width: 30px; height: 30px; fill: var(--primary); filter: drop-shadow(0 0 5px rgba(255,215,0,0.5)); }
 
-        /* CONTENEDOR PRINCIPAL */
-        #chat-container { flex: 1; display: flex; flex-direction: column; max-width: 900px; margin: 20px auto; width: 95%; background: #262626; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
+        .btn-torneos { 
+            border: 2px solid var(--primary); color: var(--primary); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-torneos:hover { background: var(--primary); color: #000; }
+
+        /* CHAT CONTAINER */
+        #chat-container { flex: 1; display: flex; flex-direction: column; max-width: 900px; margin: 15px auto; width: 95%; background: var(--card); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: #1f1f1f; }
         
-        /* CAJA DE MENSAJES */
-        #chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #1f1f1f; }
-        
-        /* ICONOS Y BURBUJAS */
-        .avatar { width: 35px; height: 35px; background: #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 10px; flex-shrink: 0; border: 2px solid #000; }
-        .msg-wrapper { display: flex; align-items: flex-start; max-width: 85%; }
+        /* MENSAJES CON HIGIENE VISUAL */
+        .avatar { width: 40px; height: 40px; background: #000; border: 2px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .msg-wrapper { display: flex; align-items: flex-start; max-width: 88%; gap: 12px; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
-        .msg { padding: 12px 18px; border-radius: 18px; line-height: 1.5; font-size: 0.95rem; white-space: pre-wrap; } /* pre-wrap para respetar saltos de línea */
+
+        .msg { padding: 15px 22px; border-radius: 20px; line-height: 1.6; font-size: 0.95rem; white-space: pre-wrap; }
+        .bot { background: #333; color: var(--text); border-top-left-radius: 4px; box-shadow: 4px 4px 10px rgba(0,0,0,0.2); }
         
-        .bot { background: #333; color: #eee; border-top-left-radius: 2px; }
-        .bot b { color: #ffd700; display: block; margin-bottom: 4px; font-size: 0.8rem; text-transform: uppercase; }
-        .user { background: #ffd700; color: #000; border-top-right-radius: 2px; font-weight: 500; }
+        /* RESALTADO DE SECCIONES PARA JÓVENES */
+        .bot b { 
+            color: var(--primary); display: inline-block; margin-top: 10px; margin-bottom: 5px; font-size: 0.85rem; 
+            text-transform: uppercase; border-bottom: 2px solid var(--primary); padding-bottom: 2px;
+        }
+        .user { background: var(--primary); color: #000; border-top-right-radius: 4px; font-weight: 600; }
+
+        /* ANIMACIÓN ESCRIBIENDO */
+        .typing { display: none; padding: 15px 22px; background: #333; border-radius: 20px; width: fit-content; gap: 5px; align-items: center; }
+        .dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
         /* INPUT AREA */
-        .input-area { padding: 20px; background: #262626; display: flex; gap: 10px; border-top: 1px solid #333; align-items: center; }
-        input[type="text"] { flex: 1; padding: 14px 20px; border: 1px solid #444; border-radius: 30px; outline: none; background: #1a1a1a; color: white; font-size: 1rem; }
-        input:focus { border-color: #ffd700; }
-        
-        /* BOTONES */
-        .btn-action { background: #ffd700; color: #000; border: none; height: 45px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-        .btn-send { padding: 0 25px; }
-        .btn-file { width: 45px; font-size: 1.2rem; background: #444; color: #fff; }
-        .btn-file.active { background: #ffd700; color: #000; }
-        .btn-action:hover { background: #fff; color: #000; }
+        .input-area { padding: 20px; background: var(--card); display: flex; gap: 12px; border-top: 1px solid #333; align-items: center; }
+        input[type="text"] { flex: 1; padding: 15px 25px; border: 1px solid #444; border-radius: 35px; outline: none; background: #1a1a1a; color: white; font-size: 1rem; }
+        .btn-action { background: var(--primary); color: #000; border: none; height: 50px; border-radius: 35px; cursor: pointer; font-weight: 800; transition: 0.3s; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+        .btn-send { padding: 0 30px; }
+        .btn-file { width: 50px; font-size: 1.3rem; background: #444; color: #fff; }
+        .btn-file.active { background: #4caf50; color: #fff; border: none; }
 
-        /* Scrollbar personalizada */
-        #chat-box::-webkit-scrollbar { width: 6px; }
+        #chat-box::-webkit-scrollbar { width: 5px; }
         #chat-box::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1><span>🏸</span> Airi Sense · ProvenFray</h1>
-        <a href="https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/" target="_blank" class="btn-torneos">
-            🏆 Gestión de Torneos
-        </a>
+        <h1>
+            <svg class="icon-shuttle" viewBox="0 0 24 24"><path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5Z"/></svg>
+            Airi Sense · ProvenFray
+        </h1>
+        <a href="#" class="btn-torneos">🏆 Gestión de Torneos</a>
     </div>
 
     <div id="chat-container">
         <div id="chat-box">
             <div class="msg-wrapper">
-                <div class="avatar">🎾</div>
+                <div class="avatar">
+                    <svg class="icon-shuttle" style="width:20px; height:20px;" viewBox="0 0 24 24"><path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5Z"/></svg>
+                </div>
                 <div class="msg bot">
                     <b>Airi Sense · ProvenFray</b>
-                    ¡Hola! Soy tu zona de entrenamiento inteligente. <br>
-                    Estoy lista para analizar tu técnica, táctica e incluso tus fotos. <br><br>
-                    ¿Qué vamos a entrenar hoy? 🏸
+                    ¡Hola! Soy tu zona de entrenamiento inteligente. 🏸<br>
+                    Estoy lista para analizar tu técnica, táctica e incluso tus fotos.
                 </div>
             </div>
         </div>
         
+        <div id="typing-indicator" class="msg-wrapper" style="display:none; margin-left: 25px; margin-bottom: 10px;">
+            <div class="typing" style="display:flex;">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+        </div>
+
         <div class="input-area">
             <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
-            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()" title="Adjuntar foto">📎</button>
-            
+            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()">📎</button>
             <input type="text" id="userInput" placeholder="Pregunta o envía una foto...">
             <button class="btn-action btn-send" onclick="enviar()">Enviar</button>
         </div>
     </div>
 
     <script>
-        // Función para saber si hay una imagen cargada y cambiar el color del botón
         function updateFileStatus() {
             const input = document.getElementById('imageInput');
             const btn = document.getElementById('fileBtn');
             if (input.files.length > 0) {
                 btn.classList.add('active');
-                btn.innerHTML = '✅';
+                btn.innerHTML = '✔';
             } else {
                 btn.classList.remove('active');
                 btn.innerHTML = '📎';
             }
         }
 
-        // Función para convertir imagen a Base64
         function toBase64(file) {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
             });
         }
 
@@ -127,54 +125,48 @@
             const input = document.getElementById('userInput');
             const fileInput = document.getElementById('imageInput');
             const box = document.getElementById('chat-box');
+            const typing = document.getElementById('typing-indicator');
             
             if(!input.value.trim() && fileInput.files.length === 0) return;
 
             const text = input.value;
             let imageBase64 = null;
 
-            // Si hay imagen, la convertimos
             if (fileInput.files.length > 0) {
                 imageBase64 = await toBase64(fileInput.files[0]);
             }
 
-            // Mostrar mensaje del usuario
-            box.innerHTML += `
-                <div class="msg-wrapper user-wrapper">
-                    <div class="msg user">${text} ${imageBase64 ? '<br><i>(Imagen enviada 📸)</i>' : ''}</div>
-                </div>`;
+            box.innerHTML += `<div class="msg-wrapper user-wrapper"><div class="msg user">${text} ${imageBase64 ? '<br><small>📸 Imagen enviada</small>' : ''}</div></div>`;
             
-            // Limpiar inputs
             input.value = '';
             fileInput.value = '';
             updateFileStatus();
+            box.scrollTop = box.scrollHeight;
+
+            // Mostrar "escribiendo"
+            typing.style.display = 'flex';
             box.scrollTop = box.scrollHeight;
 
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: text || "Analiza esta imagen", 
-                        image: imageBase64 
-                    })
+                    body: JSON.stringify({ prompt: text || "Analiza esta imagen", image: imageBase64 })
                 });
                 const data = await res.json();
                 
+                typing.style.display = 'none'; // Ocultar
                 box.innerHTML += `
                     <div class="msg-wrapper">
-                        <div class="avatar">🎾</div>
-                        <div class="msg bot">
-                            <b>Airi Sense · ProvenFray</b>
-                            ${data.text}
-                        </div>
+                        <div class="avatar"><svg class="icon-shuttle" style="width:20px; height:20px;" viewBox="0 0 24 24"><path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5Z"/></svg></div>
+                        <div class="msg bot"><b>Airi Sense · ProvenFray</b>${data.text}</div>
                     </div>`;
             } catch (e) {
-                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:45px;">Airi está ajustando su raqueta... Error de conexión.</div>`;
+                typing.style.display = 'none';
+                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:45px;">Error de conexión.</div>`;
             }
             box.scrollTop = box.scrollHeight;
         }
-
         document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') enviar(); });
     </script>
 </body>
