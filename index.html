@@ -6,75 +6,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIRI SENSE - PROVENFRAY</title>
     <style>
-        :root { --primary: #ffd700; --bg: #0a0a0a; --card: #1a1a1a; --text: #ffffff; }
+        :root { --primary: #ffd700; --bg: #0f0f0f; --card: #1a1a1a; --text: #f0f0f0; }
         
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg); display: flex; flex-direction: column; height: 100vh; color: var(--text); overflow: hidden; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; background-color: var(--bg); display: flex; flex-direction: column; height: 100vh; color: var(--text); overflow: hidden; }
         
         /* CABECERA */
-        .header { background: #000; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
-        .header h1 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: var(--primary); text-transform: uppercase; font-weight: 800; }
+        .header { background: #000; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); box-shadow: 0 4px 15px rgba(255,215,0,0.2); }
+        .header h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 12px; color: var(--primary); text-transform: uppercase; font-weight: 900; letter-spacing: 1px; }
         
-        /* ICONO VOLANTE (Simplificado para que no falle) */
-        .shuttle-icon { width: 28px; height: 28px; background: var(--primary); clip-path: polygon(20% 0%, 80% 0%, 100% 80%, 50% 100%, 0% 80%); box-shadow: 0 0 10px var(--primary); }
+        /* EL VOLANTE (DIBUJO REAL) */
+        .shuttle-svg { width: 32px; height: 32px; fill: var(--primary); filter: drop-shadow(0 0 5px rgba(255,215,0,0.5)); }
 
-        .btn-torneos { border: 1px solid var(--primary); color: var(--primary); padding: 5px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.7rem; }
+        .btn-torneos { background: var(--primary); color: #000; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
 
-        /* CHAT */
-        #chat-container { flex: 1; display: flex; flex-direction: column; max-width: 800px; margin: 10px auto; width: 95%; background: var(--card); border-radius: 10px; overflow: hidden; }
-        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #121212; }
+        /* CONTENEDOR CHAT */
+        #chat-container { flex: 1; display: flex; flex-direction: column; max-width: 850px; margin: 15px auto; width: 95%; background: var(--card); border-radius: 15px; border: 1px solid #333; overflow: hidden; }
+        #chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%); }
         
         /* MENSAJES CON INTERLINEADO 1.5 */
-        .msg-wrapper { display: flex; align-items: flex-start; max-width: 85%; gap: 12px; }
+        .avatar { width: 35px; height: 35px; flex-shrink: 0; }
+        .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 15px; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
-        .msg { padding: 15px 20px; border-radius: 12px; font-size: 1rem; line-height: 1.5; white-space: pre-wrap; }
-        .bot { background: #262626; color: #f0f0f0; border-left: 4px solid var(--primary); }
+        .msg { padding: 18px 22px; border-radius: 15px; font-size: 1rem; line-height: 1.5; white-space: pre-wrap; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .bot { background: #262626; color: #ffffff; border-left: 4px solid var(--primary); }
         .user { background: var(--primary); color: #000; font-weight: 700; }
 
-        /* INPUT */
-        .input-area { padding: 15px; background: #000; display: flex; gap: 10px; }
-        input[type="text"] { flex: 1; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #111; color: white; outline: none; }
-        .btn-action { background: var(--primary); color: #000; border: none; padding: 0 20px; border-radius: 5px; cursor: pointer; font-weight: 800; }
+        /* INPUT AREA */
+        .input-area { padding: 20px; background: #000; display: flex; gap: 12px; align-items: center; }
+        input[type="text"] { flex: 1; padding: 14px 20px; border: 1px solid #333; border-radius: 8px; background: #111; color: white; font-size: 1rem; outline: none; }
+        input:focus { border-color: var(--primary); }
+        .btn-action { background: var(--primary); color: #000; border: none; height: 48px; border-radius: 8px; cursor: pointer; font-weight: 900; padding: 0 25px; text-transform: uppercase; }
+        
+        #chat-box::-webkit-scrollbar { width: 6px; }
+        #chat-box::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1><div class="shuttle-icon"></div> Airi Sense · ProvenFray</h1>
+        <h1>
+            <svg class="shuttle-svg" viewBox="0 0 512 512">
+                <path d="M448 96c0-17.7-14.3-32-32-32H96C78.3 64 64 78.3 64 96v32c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V96zM96 192c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32H96zM224 448c0 17.7 14.3 32 32 32s32-14.3 32-32v-32h-64v32z"/>
+            </svg>
+            Airi Sense · ProvenFray
+        </h1>
         <a href="#" class="btn-torneos">TORNEOS</a>
     </div>
 
     <div id="chat-container">
         <div id="chat-box">
             <div class="msg-wrapper">
-                <div class="shuttle-icon" style="width:20px; height:20px;"></div>
-                <div class="msg bot">¡Hola! Soy tu zona de entrenamiento inteligente. 🏸
+                <div class="avatar">
+                    <svg class="shuttle-svg" style="width:24px; height:24px;" viewBox="0 0 512 512">
+                        <path d="M448 96c0-17.7-14.3-32-32-32H96C78.3 64 64 78.3 64 96v32c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V96zM96 192c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32H96zM224 448c0 17.7 14.3 32 32 32s32-14.3 32-32v-32h-64v32z"/>
+                    </svg>
+                </div>
+                <div class="msg bot">¡Hola!
 
-Estoy lista para analizar tu técnica, táctica y tus fotos.
+Soy tu zona de entrenamiento inteligente.
 
-¿En qué quieres trabajar hoy?</div>
+Estoy lista para analizar:
+🔹 tu técnica,
+🔹 tu táctica,
+🔹 y tus fotos.
+
+¿Qué quieres mejorar hoy?</div>
             </div>
         </div>
         
         <div class="input-area">
             <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
-            <button class="btn-action" style="background:#333; color:white;" onclick="document.getElementById('imageInput').click()">📎</button>
-            <input type="text" id="userInput" placeholder="Escribe aquí...">
-            <button class="btn-action" onclick="enviar()">ENVIAR</button>
+            <button class="btn-action" style="background:#333; color:white; width:48px; padding:0;" onclick="document.getElementById('imageInput').click()">📎</button>
+            <input type="text" id="userInput" placeholder="Pregunta algo sobre tu juego...">
+            <button class="btn-action" onclick="enviar()">Enviar</button>
         </div>
     </div>
 
     <script>
         function updateFileStatus() {
             const input = document.getElementById('imageInput');
-            document.querySelector('.btn-file').innerHTML = input.files.length > 0 ? '✔' : '📎';
+            if (input.files.length > 0) alert("Imagen cargada");
         }
 
         async function enviar() {
             const input = document.getElementById('userInput');
-            const fileInput = document.getElementById('imageInput');
             const box = document.getElementById('chat-box');
-            if(!input.value.trim() && fileInput.files.length === 0) return;
+            if(!input.value.trim()) return;
 
             const text = input.value;
             box.innerHTML += `<div class="msg-wrapper user-wrapper"><div class="msg user">${text}</div></div>`;
@@ -90,7 +108,7 @@ Estoy lista para analizar tu técnica, táctica y tus fotos.
                 const data = await res.json();
                 box.innerHTML += `
                     <div class="msg-wrapper">
-                        <div class="shuttle-icon" style="width:20px; height:20px; margin-top:10px;"></div>
+                        <div class="avatar"><svg class="shuttle-svg" style="width:20px; height:20px; margin-top:5px;" viewBox="0 0 512 512"><path d="M448 96c0-17.7-14.3-32-32-32H96C78.3 64 64 78.3 64 96v32c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V96zM96 192c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32H96zM224 448c0 17.7 14.3 32 32 32s32-14.3 32-32v-32h-64v32z"/></svg></div>
                         <div class="msg bot">${data.text}</div>
                     </div>`;
             } catch (e) {
@@ -98,6 +116,7 @@ Estoy lista para analizar tu técnica, táctica y tus fotos.
             }
             box.scrollTop = box.scrollHeight;
         }
+        document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') enviar(); });
     </script>
 </body>
 </html>
