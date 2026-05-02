@@ -26,7 +26,7 @@
             overflow: hidden; 
         }
         
-        /* CABECERA PROFESIONAL */
+        /* CABECERA GHOST STYLE */
         .header { 
             background: #000; 
             padding: 10px 20px; 
@@ -49,7 +49,7 @@
             font-weight: 900;
         }
         
-        /* BOTÓN GHOST (Gestión) */
+        /* BOTÓN GHOST (Torneos) */
         .btn-torneos { 
             border: 1.5px solid var(--primary); 
             color: var(--primary); 
@@ -63,7 +63,7 @@
         }
         .btn-torneos:hover { background: var(--primary); color: #000; }
 
-        /* CONTENEDOR PRINCIPAL DEL CHAT */
+        /* CONTENEDOR CHAT */
         #chat-container { 
             flex: 1; 
             display: flex; 
@@ -88,7 +88,7 @@
             background: #1f1f1f; 
         }
         
-        /* ICONO DEL VOLANTE (SVG) */
+        /* --- NUEVO ICONO VOLANTE SVG ALTAMENTE DETALLADO (DISEÑADO A MANO) --- */
         .shuttle-icon { 
             width: 24px; 
             height: 24px; 
@@ -96,7 +96,7 @@
             transform: rotate(-15deg);
         }
 
-        /* BURBUJAS DE MENSAJE E INTERLINEADO COMPACTO */
+        /* MENSAJES E INTERLINEADO ULTRA-DENSO */
         .avatar { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 10px; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
@@ -105,22 +105,24 @@
             padding: 10px 16px; 
             border-radius: 15px; 
             font-size: 0.92rem; 
-            line-height: 1.15; /* Interlineado compacto solicitado */
+            line-height: 1.05; /* Interlineado ultra-compacto solicitado */
             white-space: pre-wrap; 
             word-wrap: break-word;
         }
         .bot { background: var(--bot-bubble); color: var(--text); border-top-left-radius: 2px; }
         
-        /* Subtítulos dentro de la respuesta de la IA */
+        /* Títulos dentro de la respuesta de la IA (Nivel 'Gamer') */
         .bot b { 
             color: var(--primary); 
             display: inline-block; 
-            margin-top: 5px; 
-            margin-bottom: 2px; 
+            margin-top: 4px; /* Un poco más compacto */
+            margin-bottom: 1px; /* Casi sin hueco */
             font-size: 0.75rem; 
             text-transform: uppercase; 
             border-bottom: 1px solid var(--primary); 
+            padding-bottom: 1px;
         }
+        .bot b:first-of-type { margin-top: 0; }
         
         .user { background: var(--primary); color: #000; border-top-right-radius: 2px; font-weight: 700; }
 
@@ -186,7 +188,7 @@
         <div id="chat-box">
             <div class="msg-wrapper">
                 <div class="avatar">
-                    <svg class="shuttle-icon" style="width:18px; height:18px;" viewBox="0 0 24 24">
+                    <svg class="shuttle-icon" style="width:20px; height:20px;" viewBox="0 0 24 24">
                         <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
                     </svg>
                 </div>
@@ -209,7 +211,6 @@
     </div>
 
     <script>
-        // Actualiza el botón de adjuntar cuando hay un archivo
         function updateFileStatus() {
             const input = document.getElementById('imageInput');
             const btn = document.getElementById('fileBtn');
@@ -222,7 +223,6 @@
             }
         }
 
-        // Convierte imagen a formato que la IA entiende
         function toBase64(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -251,28 +251,21 @@
                     <div class="msg user">${text} ${imageBase64 ? '<br><small style="font-size:0.7rem; opacity:0.8;">📸 Imagen cargada</small>' : ''}</div>
                 </div>`;
             
-            // Limpiar y hacer scroll
-            input.value = '';
-            fileInput.value = '';
-            updateFileStatus();
+            input.value = ''; fileInput.value = ''; updateFileStatus();
             box.scrollTop = box.scrollHeight;
 
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: text || "Analiza esta imagen de bádminton", 
-                        image: imageBase64 
-                    })
+                    body: JSON.stringify({ prompt: text || "Analiza esta imagen", image: imageBase64 })
                 });
                 const data = await res.json();
                 
-                // Mostrar respuesta de Airi con su icono de volante
                 box.innerHTML += `
                     <div class="msg-wrapper">
                         <div class="avatar">
-                            <svg class="shuttle-icon" style="width:18px; height:18px;" viewBox="0 0 24 24">
+                            <svg class="shuttle-icon" style="width:20px; height:20px;" viewBox="0 0 24 24">
                                 <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
                             </svg>
                         </div>
@@ -282,12 +275,11 @@
                         </div>
                     </div>`;
             } catch (e) {
-                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:40px;">Error de conexión con la pista.</div>`;
+                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:40px;">Airi está ajustando su raqueta... Error de conexión.</div>`;
             }
             box.scrollTop = box.scrollHeight;
         }
 
-        // Enviar con tecla Enter
         document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') enviar(); });
     </script>
 </body>
