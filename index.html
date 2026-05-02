@@ -8,14 +8,13 @@
     <style>
         :root { 
             --primary: #ffd700; 
-            --bg: #0a0a0a; 
-            --card: #161616; 
+            --bg: #0d0d0d; 
+            --card: #1a1a1a; 
             --text: #ffffff; 
-            --glow: rgba(255, 215, 0, 0.4);
         }
         
         body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
             margin: 0; 
             background-color: var(--bg); 
             display: flex; 
@@ -25,54 +24,52 @@
             overflow: hidden; 
         }
         
-        /* CABECERA ESTILO IMPACTO */
+        /* CABECERA */
         .header { 
             background: #000; 
-            padding: 15px 25px; 
+            padding: 12px 20px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             border-bottom: 2px solid var(--primary);
-            box-shadow: 0 4px 20px var(--glow);
-            z-index: 10;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.2);
         }
         .header h1 { 
             margin: 0; 
-            font-size: 1.2rem; 
+            font-size: 1.1rem; 
             display: flex; 
             align-items: center; 
-            gap: 15px; 
+            gap: 12px; 
             color: var(--primary); 
             text-transform: uppercase; 
             font-weight: 900;
-            letter-spacing: 2px;
         }
-        
-        /* ICONO VOLANTE SÓLIDO (DISEÑO ANTI-DEFORMACIÓN) */
+
+        /* VOLANTE REALISTA (SVG DETALLADO) */
         .shuttle-svg { 
-            width: 32px; 
-            height: 32px; 
+            width: 28px; 
+            height: 28px; 
             fill: var(--primary); 
-            filter: drop-shadow(0 0 8px var(--primary)); /* Efecto neón real */
+            filter: drop-shadow(0 0 3px rgba(255,215,0,0.5));
         }
 
         .btn-torneos { 
-            background: var(--primary);
-            color: #000;
-            padding: 8px 16px; 
+            border: 1.5px solid var(--primary); 
+            color: var(--primary); 
+            padding: 6px 12px; 
             border-radius: 4px; 
             text-decoration: none; 
-            font-weight: 800; 
-            font-size: 0.75rem; 
+            font-weight: 700; 
+            font-size: 0.7rem; 
             text-transform: uppercase;
         }
 
-        /* CONTENEDOR CHAT */
+        /* CHAT CONTAINER */
         #chat-container { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
-            max-width: 900px; 
+            max-width: 850px; 
             margin: 15px auto; 
             width: 95%; 
             background: var(--card); 
@@ -88,37 +85,35 @@
             display: flex; 
             flex-direction: column; 
             gap: 20px; 
-            background: linear-gradient(180deg, #161616 0%, #000000 100%); 
+            background: #121212; 
         }
         
         /* MENSAJES CON INTERLINEADO 1.5 */
-        .avatar { width: 35px; height: 35px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .msg-wrapper { display: flex; align-items: flex-start; max-width: 85%; gap: 15px; }
+        .avatar { width: 32px; height: 32px; flex-shrink: 0; }
+        .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 15px; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
         .msg { 
             padding: 15px 22px; 
-            border-radius: 15px; 
+            border-radius: 12px; 
             font-size: 1rem; 
-            line-height: 1.5; /* INTERLINEADO 1.5 REAL */
+            line-height: 1.5; /* AJUSTADO A 1.5 */
             white-space: pre-wrap;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         
         .bot { 
-            background: #222; 
+            background: #2a2a2a; 
             color: #efefef; 
-            border-left: 5px solid var(--primary);
+            border-left: 4px solid var(--primary);
         }
         
         .bot b { 
             color: var(--primary); 
             display: block; 
             margin-bottom: 8px;
-            font-size: 0.85rem; 
+            font-size: 0.8rem; 
             text-transform: uppercase; 
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255,215,0,0.2);
         }
 
         .user { 
@@ -129,46 +124,40 @@
 
         /* INPUT AREA */
         .input-area { 
-            padding: 20px; 
+            padding: 15px 20px; 
             background: #000; 
             display: flex; 
-            gap: 15px; 
+            gap: 12px; 
             align-items: center;
         }
         input[type="text"] { 
             flex: 1; 
-            padding: 15px 20px; 
+            padding: 12px 18px; 
             border: 1px solid #333; 
-            border-radius: 8px; 
+            border-radius: 6px; 
             background: #111; 
             color: white; 
             font-size: 1rem; 
             outline: none;
         }
-        input:focus { border-color: var(--primary); }
-
         .btn-action { 
             background: var(--primary); 
             color: #000; 
             border: none; 
-            height: 50px; 
-            border-radius: 8px; 
+            height: 45px; 
+            border-radius: 6px; 
             cursor: pointer; 
             font-weight: 900;
-            padding: 0 25px;
-            text-transform: uppercase;
+            padding: 0 20px;
         }
-        .btn-file { background: #333; color: #fff; width: 50px; padding: 0; font-size: 1.5rem; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>
-            <svg class="shuttle-svg" viewBox="0 0 24 24">
-                <path d="M12 2L7 14h10L12 2z"/> 
-                <rect x="8" y="15" width="8" height="2"/>
-                <path d="M9 18a3 3 0 0 0 6 0h-6z"/>
+            <svg class="shuttle-svg" viewBox="0 0 512 512">
+                <path d="M269.4 397c-5.4-1.3-10.9-2-16.4-2s-11 1-16.4 2l-7.3-51.2C239.9 344.9 249.2 344 253 344s13.1.9 23.7 1.8l-7.3 51.2zM216.5 338.8l-23-161.4c17.6-6 38-9.4 60.1-9.4s42.5 3.4 60.1 9.4l-23 161.4c-12-1.3-25.2-1.8-37.1-1.8s-25.1.5-37.1 1.8zM470.1 56.4c11.6 4.9 17 18.4 12.1 30l-88.6 206.8c-14.8-12-32.1-22.3-51.5-30.5L438.4 46.2c4.9-11.6 18.4-17 30-12.1zM41.9 56.4c11.6-4.9 25.1.5 30 12.1L171.2 272.7c-19.4 8.2-36.7 18.5-51.5 30.5L31.1 86.4c-4.9-11.6.5-25.1 12.1-30zM256 416c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64z"/>
             </svg>
             Airi Sense · ProvenFray
         </h1>
@@ -179,8 +168,8 @@
         <div id="chat-box">
             <div class="msg-wrapper">
                 <div class="avatar">
-                    <svg class="shuttle-svg" style="width:24px; height:24px;" viewBox="0 0 24 24">
-                        <path d="M12 2L7 14h10L12 2z M8 15h8v2H8v-2z M9 18a3 3 0 0 0 6 0h-6z"/>
+                    <svg class="shuttle-svg" style="width:24px; height:24px;" viewBox="0 0 512 512">
+                        <path d="M269.4 397c-5.4-1.3-10.9-2-16.4-2s-11 1-16.4 2l-7.3-51.2C239.9 344.9 249.2 344 253 344s13.1.9 23.7 1.8l-7.3 51.2zM216.5 338.8l-23-161.4c17.6-6 38-9.4 60.1-9.4s42.5 3.4 60.1 9.4l-23 161.4c-12-1.3-25.2-1.8-37.1-1.8s-25.1.5-37.1 1.8zM470.1 56.4c11.6 4.9 17 18.4 12.1 30l-88.6 206.8c-14.8-12-32.1-22.3-51.5-30.5L438.4 46.2c4.9-11.6 18.4-17 30-12.1zM41.9 56.4c11.6-4.9 25.1.5 30 12.1L171.2 272.7c-19.4 8.2-36.7 18.5-51.5 30.5L31.1 86.4c-4.9-11.6.5-25.1 12.1-30zM256 416c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64z"/>
                     </svg>
                 </div>
                 <div class="msg bot">
@@ -200,59 +189,42 @@ Estoy lista para analizar:
         </div>
         
         <div class="input-area">
-            <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
-            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()">📎</button>
-            <input type="text" id="userInput" placeholder="Escribe tu duda técnica...">
+            <input type="file" id="imageInput" accept="image/*" style="display:none;">
+            <button class="btn-action" style="background:#333; color:white; width:45px; padding:0;" onclick="document.getElementById('imageInput').click()">📎</button>
+            <input type="text" id="userInput" placeholder="Escribe aquí...">
             <button class="btn-action" onclick="enviar()">ENVIAR</button>
         </div>
     </div>
 
     <script>
-        function updateFileStatus() {
-            const input = document.getElementById('imageInput');
-            const btn = document.getElementById('fileBtn');
-            btn.innerHTML = input.files.length > 0 ? '✔' : '📎';
-        }
-
         async function enviar() {
             const input = document.getElementById('userInput');
-            const fileInput = document.getElementById('imageInput');
             const box = document.getElementById('chat-box');
-            if(!input.value.trim() && fileInput.files.length === 0) return;
+            if(!input.value.trim()) return;
 
             const text = input.value;
-            let imageBase64 = null;
-
-            if (fileInput.files.length > 0) {
-                const reader = new FileReader();
-                imageBase64 = await new Promise(r => {
-                    reader.onload = () => r(reader.result);
-                    reader.readAsDataURL(fileInput.files[0]);
-                });
-            }
-
             box.innerHTML += `<div class="msg-wrapper user-wrapper"><div class="msg user">${text}</div></div>`;
-            input.value = ''; fileInput.value = ''; updateFileStatus();
+            input.value = '';
             box.scrollTop = box.scrollHeight;
 
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: text || "Analiza esta imagen", image: imageBase64 })
+                    body: JSON.stringify({ prompt: text })
                 });
                 const data = await res.json();
                 box.innerHTML += `
                     <div class="msg-wrapper">
                         <div class="avatar">
-                            <svg class="shuttle-svg" style="width:24px; height:24px;" viewBox="0 0 24 24">
-                                <path d="M12 2L7 14h10L12 2z M8 15h8v2H8v-2z M9 18a3 3 0 0 0 6 0h-6z"/>
+                            <svg class="shuttle-svg" style="width:20px; height:20px; margin-top:10px;" viewBox="0 0 512 512">
+                                <path d="M269.4 397c-5.4-1.3-10.9-2-16.4-2s-11 1-16.4 2l-7.3-51.2C239.9 344.9 249.2 344 253 344s13.1.9 23.7 1.8l-7.3 51.2zM216.5 338.8l-23-161.4c17.6-6 38-9.4 60.1-9.4s42.5 3.4 60.1 9.4l-23 161.4c-12-1.3-25.2-1.8-37.1-1.8s-25.1.5-37.1 1.8zM470.1 56.4c11.6 4.9 17 18.4 12.1 30l-88.6 206.8c-14.8-12-32.1-22.3-51.5-30.5L438.4 46.2c4.9-11.6 18.4-17 30-12.1zM41.9 56.4c11.6-4.9 25.1.5 30 12.1L171.2 272.7c-19.4 8.2-36.7 18.5-51.5 30.5L31.1 86.4c-4.9-11.6.5-25.1 12.1-30zM256 416c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64z"/>
                             </svg>
                         </div>
                         <div class="msg bot"><b>Airi Sense · ProvenFray</b>${data.text}</div>
                     </div>`;
             } catch (e) {
-                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b;">Error de conexión.</div>`;
+                box.innerHTML += `<div class="msg bot" style="color:red;">Error de conexión.</div>`;
             }
             box.scrollTop = box.scrollHeight;
         }
