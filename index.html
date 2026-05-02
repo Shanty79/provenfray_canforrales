@@ -4,17 +4,18 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIRI SENSE - PROVENFRAY</title>
+    <title>AIRI SENSE TÁCTICA - PROVENFRAY</title>
     <style>
         :root { 
             --primary: #ffd700; 
             --bg: #0d0d0d; 
             --card: #1a1a1a; 
             --text: #ffffff; 
+            --bot-bubble: #2a2a2a;
         }
         
         body { 
-            font-family: 'Inter', 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
             margin: 0; 
             background-color: var(--bg); 
             display: flex; 
@@ -24,143 +25,149 @@
             overflow: hidden; 
         }
         
-        /* CABECERA */
+        /* CABECERA (Header) */
         .header { 
             background: #000; 
-            padding: 15px 25px; 
+            padding: 10px 20px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-bottom: 3px solid var(--primary);
-            box-shadow: 0 4px 20px rgba(255,215,0,0.2);
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(255,215,0,0.1);
+            z-index: 10;
         }
         .header h1 { 
             margin: 0; 
-            font-size: 1.2rem; 
+            font-size: 1.1rem; 
             display: flex; 
             align-items: center; 
             gap: 12px; 
             color: var(--primary); 
             text-transform: uppercase; 
-            font-weight: 900;
             letter-spacing: 1px;
+            font-weight: 900;
         }
-
-        /* ICONO VOLANTE TÉCNICO */
+        
+        /* ICONO VOLANTE REALISTA SVG (DISEÑADO A MANO) */
         .shuttle-svg { 
-            width: 30px; 
-            height: 30px; 
+            width: 26px; 
+            height: 26px; 
             fill: var(--primary); 
-            filter: drop-shadow(0 0 5px var(--primary)); 
+            filter: drop-shadow(0 0 5px var(--primary)); /* Efecto neón */
+            transform: rotate(-10deg);
         }
 
         .btn-torneos { 
-            background: var(--primary);
-            color: #000;
-            padding: 8px 16px; 
+            border: 1.5px solid var(--primary); 
+            color: var(--primary); 
+            padding: 6px 12px; 
             border-radius: 6px; 
             text-decoration: none; 
-            font-weight: 800; 
-            font-size: 0.75rem; 
-            text-transform: uppercase;
+            font-weight: 700; 
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            transition: 0.3s;
         }
+        .btn-torneos:hover { background: var(--primary); color: #000; }
 
         /* CONTENEDOR CHAT */
         #chat-container { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
-            max-width: 900px; 
+            max-width: 850px; 
             margin: 15px auto; 
             width: 95%; 
             background: var(--card); 
             border-radius: 15px; 
             border: 1px solid #333;
             overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
+        /* CAJA DE MENSAJES */
         #chat-box { 
             flex: 1; 
-            padding: 25px; 
+            padding: 20px; 
             overflow-y: auto; 
             display: flex; 
             flex-direction: column; 
-            gap: 20px; 
-            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%); 
+            gap: 15px; 
+            background: radial-gradient(circle at top, #1f1f1f 0%, #121212 100%); 
         }
         
-        /* MENSAJES CON INTERLINEADO 1.5 */
-        .avatar { width: 35px; height: 35px; flex-shrink: 0; }
-        .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 15px; }
+        /* AVATAR Y BURBUJAS */
+        .avatar { width: 32px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 12px; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
+        /* --- AQUÍ ESTÁ EL TRUCO DEL INTERLINEADO 1.5 --- */
         .msg { 
-            padding: 15px 20px; 
-            border-radius: 15px; 
-            font-size: 1rem; 
-            line-height: 1.5; /* AJUSTE A 1.5 SOLICITADO */
-            white-space: pre-wrap;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            padding: 12px 18px; 
+            border-radius: 12px; 
+            font-size: 0.95rem; 
+            line-height: 1.5; /* SOLICITADO */
+            white-space: pre-wrap; 
+            word-wrap: break-word;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+        .bot { background: var(--bot-bubble); color: #efefef; border-top-left-radius: 2px; }
         
-        .bot { 
-            background: #262626; 
-            color: #efefef; 
-            border-left: 4px solid var(--primary);
-        }
-        
+        /* Títulos dentro de la respuesta de la IA (HIGIENE VISUAL) */
         .bot b { 
             color: var(--primary); 
             display: block; 
-            margin-bottom: 10px;
-            font-size: 0.85rem; 
+            margin: 5px 0 2px 0;
+            font-size: 0.8rem; 
             text-transform: uppercase; 
             border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-            padding-bottom: 4px;
+            padding-bottom: 2px;
         }
+        .bot b:first-of-type { margin-top: 0; }
+        
+        .user { background: var(--primary); color: #000; border-top-right-radius: 2px; font-weight: 700; }
 
-        .user { 
-            background: var(--primary); 
-            color: #000; 
-            font-weight: 700;
-        }
-
-        /* INPUT AREA */
+        /* ÁREA DE INPUT */
         .input-area { 
-            padding: 20px; 
+            padding: 15px 20px; 
             background: #000; 
             display: flex; 
-            gap: 12px; 
+            gap: 10px; 
+            border-top: 1px solid #333; 
             align-items: center;
         }
         input[type="text"] { 
             flex: 1; 
-            padding: 14px 22px; 
+            padding: 12px 20px; 
             border: 1px solid #333; 
-            border-radius: 10px; 
+            border-radius: 8px; 
+            outline: none; 
             background: #111; 
             color: white; 
-            font-size: 1rem; 
-            outline: none;
+            font-size: 0.95rem; 
         }
         input:focus { border-color: var(--primary); }
-
+        
         .btn-action { 
             background: var(--primary); 
             color: #000; 
             border: none; 
-            height: 50px; 
-            border-radius: 10px; 
+            height: 45px; 
+            border-radius: 8px; 
             cursor: pointer; 
-            font-weight: 900;
-            padding: 0 25px;
-            text-transform: uppercase;
+            font-weight: 900; 
+            transition: 0.2s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
         }
-        .btn-file { background: #333; color: #fff; width: 50px; padding: 0; font-size: 1.4rem; }
-        .btn-file.active { background: #2e7d32; }
+        .btn-send { padding: 0 20px; text-transform: uppercase; font-size: 0.8rem; }
+        .btn-file { width: 45px; font-size: 1.2rem; background: #333; color: #fff; }
+        .btn-file.active { background: #4caf50; color: white; border: none; }
 
-        #chat-box::-webkit-scrollbar { width: 6px; }
-        #chat-box::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        /* Scrollbar Personalizada */
+        #chat-box::-webkit-scrollbar { width: 4px; }
+        #chat-box::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -168,34 +175,39 @@
     <div class="header">
         <h1>
             <svg class="shuttle-svg" viewBox="0 0 24 24">
-                <path d="M12 2L9 7h6l-3-5z M8 8h8l-1 7h-6l-1-7z M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/>
+                <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
             </svg>
             Airi Sense · ProvenFray
         </h1>
-        <a href="#" class="btn-torneos">TORNEOS</a>
+        <a href="#" class="btn-torneos">🏆 Gestión</a>
     </div>
 
     <div id="chat-container">
         <div id="chat-box">
             <div class="msg-wrapper">
                 <div class="avatar">
-                    <svg class="shuttle-svg" style="width:26px; height:26px;" viewBox="0 0 24 24">
-                        <path d="M12 2L9 7h6l-3-5z M8 8h8l-1 7h-6l-1-7z M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/>
+                    <svg class="shuttle-svg" style="width:20px; height:20px;" viewBox="0 0 24 24">
+                        <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
                     </svg>
                 </div>
                 <div class="msg bot">
-                    <b>Airi Sense · ProvenFray</b>
-                    ¡Hola! Soy tu zona de entrenamiento inteligente. 🏸
-                    Lista para analizar tu técnica, táctica y tus fotos.
+¡Hola!
+
+Soy tu zona de entrenamiento inteligente.
+
+Lista para analizar:
+🔹 tu técnica,
+🔹 tu táctica,
+🔹 y tus fotos.
                 </div>
             </div>
         </div>
         
         <div class="input-area">
             <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
-            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()">📎</button>
+            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()" title="Adjuntar foto">📎</button>
             <input type="text" id="userInput" placeholder="Escribe aquí tu consulta...">
-            <button class="btn-action" onclick="enviar()">ENVIAR</button>
+            <button class="btn-action btn-send" onclick="enviar()">Enviar</button>
         </div>
     </div>
 
@@ -224,7 +236,7 @@
                 });
             }
 
-            box.innerHTML += `<div class="msg-wrapper user-wrapper"><div class="msg user">${text}</div></div>`;
+            box.innerHTML += `<div class="msg-wrapper user-wrapper"><div class="msg user">${text} ${imageBase64 ? '<br><small>📸 Foto enviada</small>' : ''}</div></div>`;
             input.value = ''; fileInput.value = ''; updateFileStatus();
             box.scrollTop = box.scrollHeight;
 
@@ -232,16 +244,13 @@
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: text || "Analiza esta imagen", image: imageBase64 })
+                    body: JSON.stringify({ prompt: text || "Analiza esta imagen de bádminton", image: imageBase64 })
                 });
                 const data = await res.json();
+                
                 box.innerHTML += `
                     <div class="msg-wrapper">
-                        <div class="avatar">
-                            <svg class="shuttle-svg" style="width:24px; height:24px;" viewBox="0 0 24 24">
-                                <path d="M12 2L9 7h6l-3-5z M8 8h8l-1 7h-6l-1-7z M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/>
-                            </svg>
-                        </div>
+                        <div class="avatar"><svg class="shuttle-svg" style="width:20px; height:20px;" viewBox="0 0 24 24"><path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/></svg></div>
                         <div class="msg bot"><b>Airi Sense · ProvenFray</b>${data.text}</div>
                     </div>`;
             } catch (e) {
