@@ -41,28 +41,27 @@
         /* CAJA DE MENSAJES */
         #chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #1f1f1f; }
         
-        /* ICONO PERSONALIZADO EN LOS MENSAJES */
+        /* ICONOS Y BURBUJAS */
         .avatar { width: 35px; height: 35px; background: #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 10px; flex-shrink: 0; border: 2px solid #000; }
-
         .msg-wrapper { display: flex; align-items: flex-start; max-width: 85%; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
-
-        .msg { padding: 12px 18px; border-radius: 18px; line-height: 1.5; font-size: 0.95rem; }
+        .msg { padding: 12px 18px; border-radius: 18px; line-height: 1.5; font-size: 0.95rem; white-space: pre-wrap; } /* pre-wrap para respetar saltos de línea */
         
-        /* Estilo Fray-Smash */
         .bot { background: #333; color: #eee; border-top-left-radius: 2px; }
         .bot b { color: #ffd700; display: block; margin-bottom: 4px; font-size: 0.8rem; text-transform: uppercase; }
-        
-        /* Estilo Usuario */
         .user { background: #ffd700; color: #000; border-top-right-radius: 2px; font-weight: 500; }
 
         /* INPUT AREA */
-        .input-area { padding: 20px; background: #262626; display: flex; gap: 12px; border-top: 1px solid #333; }
-        input { flex: 1; padding: 14px 20px; border: 1px solid #444; border-radius: 30px; outline: none; background: #1a1a1a; color: white; font-size: 1rem; }
+        .input-area { padding: 20px; background: #262626; display: flex; gap: 10px; border-top: 1px solid #333; align-items: center; }
+        input[type="text"] { flex: 1; padding: 14px 20px; border: 1px solid #444; border-radius: 30px; outline: none; background: #1a1a1a; color: white; font-size: 1rem; }
         input:focus { border-color: #ffd700; }
         
-        button { background: #ffd700; color: #000; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #fff; }
+        /* BOTONES */
+        .btn-action { background: #ffd700; color: #000; border: none; height: 45px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .btn-send { padding: 0 25px; }
+        .btn-file { width: 45px; font-size: 1.2rem; background: #444; color: #fff; }
+        .btn-file.active { background: #ffd700; color: #000; }
+        .btn-action:hover { background: #fff; color: #000; }
 
         /* Scrollbar personalizada */
         #chat-box::-webkit-scrollbar { width: 6px; }
@@ -84,46 +83,84 @@
                 <div class="avatar">🎾</div>
                 <div class="msg bot">
                     <b>Airi Sense · ProvenFray</b>
-                    Bienvenido a tu zona de entrenamiento inteligente. <br>
-                    Soy tu coach virtual de bádminton, listo para ayudarte a mejorar cada día. <br>
-                    RECUERDA!!!.Todavia estoy en proceso de creación! <br>
-                    ¿En qué quieres trabajar hoy? <br>
+                    ¡Hola! Soy tu zona de entrenamiento inteligente. <br>
+                    Estoy lista para analizar tu técnica, táctica e incluso tus fotos. <br><br>
+                    ¿Qué vamos a entrenar hoy? 🏸
                 </div>
             </div>
         </div>
         
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Pregunta a Airi Sense · ProvenFray...">
-            <button onclick="enviar()">Enviar</button>
+            <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
+            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()" title="Adjuntar foto">📎</button>
+            
+            <input type="text" id="userInput" placeholder="Pregunta o envía una foto...">
+            <button class="btn-action btn-send" onclick="enviar()">Enviar</button>
         </div>
     </div>
 
     <script>
+        // Función para saber si hay una imagen cargada y cambiar el color del botón
+        function updateFileStatus() {
+            const input = document.getElementById('imageInput');
+            const btn = document.getElementById('fileBtn');
+            if (input.files.length > 0) {
+                btn.classList.add('active');
+                btn.innerHTML = '✅';
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '📎';
+            }
+        }
+
+        // Función para convertir imagen a Base64
+        function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
         async function enviar() {
             const input = document.getElementById('userInput');
+            const fileInput = document.getElementById('imageInput');
             const box = document.getElementById('chat-box');
-            if(!input.value.trim()) return;
+            
+            if(!input.value.trim() && fileInput.files.length === 0) return;
 
             const text = input.value;
-            
-            // Mensaje del usuario
+            let imageBase64 = null;
+
+            // Si hay imagen, la convertimos
+            if (fileInput.files.length > 0) {
+                imageBase64 = await toBase64(fileInput.files[0]);
+            }
+
+            // Mostrar mensaje del usuario
             box.innerHTML += `
                 <div class="msg-wrapper user-wrapper">
-                    <div class="msg user">${text}</div>
+                    <div class="msg user">${text} ${imageBase64 ? '<br><i>(Imagen enviada 📸)</i>' : ''}</div>
                 </div>`;
             
+            // Limpiar inputs
             input.value = '';
+            fileInput.value = '';
+            updateFileStatus();
             box.scrollTop = box.scrollHeight;
 
             try {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: text })
+                    body: JSON.stringify({ 
+                        prompt: text || "Analiza esta imagen", 
+                        image: imageBase64 
+                    })
                 });
                 const data = await res.json();
                 
-                // Mensaje de la IA con icono
                 box.innerHTML += `
                     <div class="msg-wrapper">
                         <div class="avatar">🎾</div>
@@ -133,10 +170,11 @@
                         </div>
                     </div>`;
             } catch (e) {
-                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:45px;">Error de conexión.</div>`;
+                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:45px;">Airi está ajustando su raqueta... Error de conexión.</div>`;
             }
             box.scrollTop = box.scrollHeight;
         }
+
         document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') enviar(); });
     </script>
 </body>
