@@ -24,7 +24,7 @@
             overflow: hidden; 
         }
         
-        /* CABECERA PRO */
+        /* CABECERA */
         .header { 
             background: #000; 
             padding: 15px 25px; 
@@ -45,7 +45,7 @@
             font-weight: 900;
         }
 
-        /* ICONO VOLANTE "FUTURISTA" (El que te gustó más) */
+        /* ICONO VOLANTE FUTURISTA */
         .shuttle-svg { 
             width: 30px; 
             height: 30px; 
@@ -53,6 +53,7 @@
             filter: drop-shadow(0 0 5px var(--primary)); 
         }
 
+        /* BOTÓN TORNEOS (RESTABLECIDO) */
         .btn-torneos { 
             background: var(--primary);
             color: #000;
@@ -62,7 +63,9 @@
             font-weight: 800; 
             font-size: 0.75rem; 
             text-transform: uppercase;
+            transition: transform 0.2s ease;
         }
+        .btn-torneos:hover { transform: scale(1.05); opacity: 0.9; }
 
         /* CONTENEDOR CHAT */
         #chat-container { 
@@ -97,7 +100,7 @@
             padding: 15px 20px; 
             border-radius: 15px; 
             font-size: 1rem; 
-            line-height: 1.5; /* AJUSTE SOLICITADO */
+            line-height: 1.5; /* INTERLINEADO 1.5 SOLICITADO */
             white-space: pre-wrap;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
@@ -170,7 +173,7 @@
             </svg>
             Airi Sense · ProvenFray
         </h1>
-        <a href="#" class="btn-torneos">TORNEOS</a>
+        <a href="https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/" target="_blank" class="btn-torneos">TORNEOS</a>
     </div>
 
     <div id="chat-container">
@@ -200,7 +203,7 @@ Estoy lista para analizar:
         <div class="input-area">
             <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
             <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()">📎</button>
-            <input type="text" id="userInput" placeholder="Escribe aquí...">
+            <input type="text" id="userInput" placeholder="Pregunta algo sobre tu bádminton...">
             <button class="btn-action" onclick="enviar()">ENVIAR</button>
         </div>
     </div>
