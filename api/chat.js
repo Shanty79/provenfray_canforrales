@@ -3,44 +3,56 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 module.exports = async (req, res) => {
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
+  // 1. CONFIGURACIÓN DEL MODELO 3.1 FLASH LITE
   const model = genAI.getGenerativeModel(
     { 
-      model: "gemma-4-31b-it",
-      systemInstruction: `Tu nombre es Airi Sense. Eres coach de bádminton.
-      REGLA ABSOLUTA: Empieza con [RESPUESTA].
+      model: "gemini-3.1-flash-lite", 
+      systemInstruction: `Tu nombre es Airi Sense - ProvenFray. Eres coach de bádminton de élite.
+      REGLA ABSOLUTA: Empieza SIEMPRE con la palabra clave: [RESPUESTA]
       
-      ESTILO DE RESPUESTA:
-      - Responde directamente en español.
-      - Usa una sola frase por línea.
-      - Deja un espacio en blanco entre secciones.
-      - NO uses negritas (**), ni tablas, ni símbolos raros ($).
-      - Usa flechas (➡️) y puntos (🔹).`
+      ESTILO VISUAL (HIGIENE):
+      - Una sola idea corta por línea.
+      - DOBLE SALTO DE LÍNEA entre secciones.
+      - Usa flechas (➡️) y puntos (🔹).
+      - NO uses negritas (**), ni tablas de markdown, ni símbolos $.
+      - Si analizas una imagen, sé directo y técnico.`
     },
-    { apiVersion: 'v1beta' }
+    { apiVersion: 'v1beta' } // Versión necesaria para los modelos 3.1
   );
 
   const userPrompt = req.body.prompt || req.body.message || "Hola";
+  const imageBase64 = req.body.image; // Para cuando añadas el botón de subir fotos
 
   try {
-    const result = await model.generateContent(userPrompt);
+    let promptConfig = [userPrompt];
+
+    // Si el usuario envía una imagen, la añadimos al mensaje
+    if (imageBase64) {
+      promptConfig.push({
+        inlineData: {
+          data: imageBase64.split(",")[1] || imageBase64,
+          mimeType: "image/jpeg"
+        }
+      });
+    }
+
+    const result = await model.generateContent(promptConfig);
     const response = await result.response;
     let text = response.text();
 
-    // 1. Aplicamos la cuchilla para quitar los pensamientos de la IA
+    // LA CUCHILLA: Limpiamos metadatos
     if (text.includes('[RESPUESTA]')) {
       text = text.split('[RESPUESTA]').pop().trim();
     }
 
-    // 2. Limpiamos los asteriscos de negrita que la IA pone por vicio
-    text = text.replace(/\*\*/g, '');
+    // Limpieza final de asteriscos y saltos de línea HTML
+    const cleanText = text.replace(/\*\*/g, '').trim();
+    const htmlText = cleanText.replace(/\n/g, '<br>');
 
-    // 3. EL CAMBIO CLAVE: Convertimos los saltos de línea en <br> para que tu web los lea
-    const cleanHtml = text.replace(/\n/g, '<br>');
-
-    res.status(200).json({ text: cleanHtml });
+    res.status(200).json({ text: htmlText });
 
   } catch (error) {
     console.error("Error:", error);
-    res.status(200).json({ text: "Airi Sense está analizando la jugada... Intenta de nuevo." });
+    res.status(200).json({ text: "Airi Sense está analizando la jugada... ¡Prueba de nuevo!" });
   }
 };
