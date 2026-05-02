@@ -8,205 +8,194 @@
     <style>
         :root { 
             --primary: #ffd700; 
-            --bg: #1a1a1a; 
-            --card: #262626; 
-            --text: #eee; 
-            --bot-bubble: #333;
+            --bg: #0d0d0d; 
+            --card: #1a1a1a; 
+            --text: #ffffff; 
         }
         
-        /* Reset y Estructura Base */
         body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            font-family: 'Inter', 'Segoe UI', sans-serif; 
             margin: 0; 
             background-color: var(--bg); 
             display: flex; 
             flex-direction: column; 
             height: 100vh; 
-            color: #fff; 
+            color: var(--text); 
             overflow: hidden; 
         }
         
-        /* CABECERA GHOST STYLE */
+        /* CABECERA */
         .header { 
             background: #000; 
-            padding: 10px 20px; 
+            padding: 15px 25px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-bottom: 2px solid var(--primary);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            z-index: 10;
+            border-bottom: 3px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(255,215,0,0.2);
         }
         .header h1 { 
             margin: 0; 
-            font-size: 1rem; 
+            font-size: 1.2rem; 
             display: flex; 
             align-items: center; 
-            gap: 10px; 
+            gap: 12px; 
             color: var(--primary); 
             text-transform: uppercase; 
-            letter-spacing: 1px;
             font-weight: 900;
+            letter-spacing: 1px;
         }
-        
-        /* BOTÓN GHOST (Torneos) */
+
+        /* ICONO VOLANTE TÉCNICO */
+        .shuttle-svg { 
+            width: 30px; 
+            height: 30px; 
+            fill: var(--primary); 
+            filter: drop-shadow(0 0 5px var(--primary)); 
+        }
+
         .btn-torneos { 
-            border: 1.5px solid var(--primary); 
-            color: var(--primary); 
-            padding: 6px 12px; 
+            background: var(--primary);
+            color: #000;
+            padding: 8px 16px; 
             border-radius: 6px; 
             text-decoration: none; 
-            font-weight: 700; 
-            font-size: 0.65rem; 
-            text-transform: uppercase; 
-            transition: 0.3s;
+            font-weight: 800; 
+            font-size: 0.75rem; 
+            text-transform: uppercase;
         }
-        .btn-torneos:hover { background: var(--primary); color: #000; }
 
         /* CONTENEDOR CHAT */
         #chat-container { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
-            max-width: 800px; 
-            margin: 10px auto; 
+            max-width: 900px; 
+            margin: 15px auto; 
             width: 95%; 
             background: var(--card); 
-            border-radius: 12px; 
+            border-radius: 15px; 
+            border: 1px solid #333;
             overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
-        /* CAJA DE MENSAJES */
         #chat-box { 
             flex: 1; 
-            padding: 20px; 
+            padding: 25px; 
             overflow-y: auto; 
             display: flex; 
             flex-direction: column; 
-            gap: 12px; 
-            background: #1f1f1f; 
+            gap: 20px; 
+            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%); 
         }
         
-        /* --- NUEVO ICONO VOLANTE SVG ALTAMENTE DETALLADO (DISEÑADO A MANO) --- */
-        .shuttle-icon { 
-            width: 24px; 
-            height: 24px; 
-            fill: var(--primary); 
-            transform: rotate(-15deg);
-        }
-
-        /* MENSAJES E INTERLINEADO ULTRA-DENSO */
-        .avatar { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 10px; }
+        /* MENSAJES CON INTERLINEADO 1.5 */
+        .avatar { width: 35px; height: 35px; flex-shrink: 0; }
+        .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 15px; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
         .msg { 
-            padding: 10px 16px; 
+            padding: 15px 20px; 
             border-radius: 15px; 
-            font-size: 0.92rem; 
-            line-height: 1.05; /* Interlineado ultra-compacto solicitado */
-            white-space: pre-wrap; 
-            word-wrap: break-word;
+            font-size: 1rem; 
+            line-height: 1.5; /* AJUSTE A 1.5 SOLICITADO */
+            white-space: pre-wrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-        .bot { background: var(--bot-bubble); color: var(--text); border-top-left-radius: 2px; }
         
-        /* Títulos dentro de la respuesta de la IA (Nivel 'Gamer') */
+        .bot { 
+            background: #262626; 
+            color: #efefef; 
+            border-left: 4px solid var(--primary);
+        }
+        
         .bot b { 
             color: var(--primary); 
-            display: inline-block; 
-            margin-top: 4px; /* Un poco más compacto */
-            margin-bottom: 1px; /* Casi sin hueco */
-            font-size: 0.75rem; 
+            display: block; 
+            margin-bottom: 10px;
+            font-size: 0.85rem; 
             text-transform: uppercase; 
-            border-bottom: 1px solid var(--primary); 
-            padding-bottom: 1px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 4px;
         }
-        .bot b:first-of-type { margin-top: 0; }
-        
-        .user { background: var(--primary); color: #000; border-top-right-radius: 2px; font-weight: 700; }
 
-        /* ÁREA DE ENTRADA */
+        .user { 
+            background: var(--primary); 
+            color: #000; 
+            font-weight: 700;
+        }
+
+        /* INPUT AREA */
         .input-area { 
-            padding: 15px; 
-            background: var(--card); 
+            padding: 20px; 
+            background: #000; 
             display: flex; 
-            gap: 10px; 
-            border-top: 1px solid #333; 
+            gap: 12px; 
             align-items: center;
         }
         input[type="text"] { 
             flex: 1; 
-            padding: 12px 20px; 
-            border: 1px solid #444; 
-            border-radius: 25px; 
-            outline: none; 
-            background: #1a1a1a; 
+            padding: 14px 22px; 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            background: #111; 
             color: white; 
-            font-size: 0.95rem; 
+            font-size: 1rem; 
+            outline: none;
         }
         input:focus { border-color: var(--primary); }
-        
+
         .btn-action { 
             background: var(--primary); 
             color: #000; 
             border: none; 
-            height: 42px; 
-            border-radius: 25px; 
+            height: 50px; 
+            border-radius: 10px; 
             cursor: pointer; 
-            font-weight: 800; 
-            transition: 0.2s; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
+            font-weight: 900;
+            padding: 0 25px;
+            text-transform: uppercase;
         }
-        .btn-send { padding: 0 20px; text-transform: uppercase; font-size: 0.8rem; }
-        .btn-file { width: 42px; font-size: 1.1rem; background: #444; color: #fff; }
-        .btn-file.active { background: #4caf50; color: white; border: none; }
-        .btn-action:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-file { background: #333; color: #fff; width: 50px; padding: 0; font-size: 1.4rem; }
+        .btn-file.active { background: #2e7d32; }
 
-        /* Scrollbar Personalizada */
-        #chat-box::-webkit-scrollbar { width: 4px; }
-        #chat-box::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        #chat-box::-webkit-scrollbar { width: 6px; }
+        #chat-box::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>
-            <svg class="shuttle-icon" viewBox="0 0 24 24">
-                <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
+            <svg class="shuttle-svg" viewBox="0 0 24 24">
+                <path d="M12 2L9 7h6l-3-5z M8 8h8l-1 7h-6l-1-7z M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/>
             </svg>
             Airi Sense · ProvenFray
         </h1>
-        <a href="https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/" target="_blank" class="btn-torneos">
-            🏆 Torneos
-        </a>
+        <a href="#" class="btn-torneos">TORNEOS</a>
     </div>
 
     <div id="chat-container">
         <div id="chat-box">
             <div class="msg-wrapper">
                 <div class="avatar">
-                    <svg class="shuttle-icon" style="width:20px; height:20px;" viewBox="0 0 24 24">
-                        <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
+                    <svg class="shuttle-svg" style="width:26px; height:26px;" viewBox="0 0 24 24">
+                        <path d="M12 2L9 7h6l-3-5z M8 8h8l-1 7h-6l-1-7z M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/>
                     </svg>
                 </div>
                 <div class="msg bot">
                     <b>Airi Sense · ProvenFray</b>
                     ¡Hola! Soy tu zona de entrenamiento inteligente. 🏸
-                    Lista para analizar tu técnica y tus fotos. <br>
-                    ¿Qué quieres mejorar hoy?
+                    Lista para analizar tu técnica, táctica y tus fotos.
                 </div>
             </div>
         </div>
         
         <div class="input-area">
             <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
-            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()" title="Subir foto técnica">📎</button>
-            
-            <input type="text" id="userInput" placeholder="Escribe tu duda o sube una foto...">
-            <button class="btn-action btn-send" onclick="enviar()">Enviar</button>
+            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()">📎</button>
+            <input type="text" id="userInput" placeholder="Escribe aquí tu consulta...">
+            <button class="btn-action" onclick="enviar()">ENVIAR</button>
         </div>
     </div>
 
@@ -214,43 +203,28 @@
         function updateFileStatus() {
             const input = document.getElementById('imageInput');
             const btn = document.getElementById('fileBtn');
-            if (input.files.length > 0) {
-                btn.classList.add('active');
-                btn.innerHTML = '✔';
-            } else {
-                btn.classList.remove('active');
-                btn.innerHTML = '📎';
-            }
-        }
-
-        function toBase64(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-            });
+            btn.innerHTML = input.files.length > 0 ? '✔' : '📎';
+            btn.classList.toggle('active', input.files.length > 0);
         }
 
         async function enviar() {
             const input = document.getElementById('userInput');
             const fileInput = document.getElementById('imageInput');
             const box = document.getElementById('chat-box');
-            
             if(!input.value.trim() && fileInput.files.length === 0) return;
 
             const text = input.value;
             let imageBase64 = null;
 
             if (fileInput.files.length > 0) {
-                imageBase64 = await toBase64(fileInput.files[0]);
+                const reader = new FileReader();
+                imageBase64 = await new Promise(r => {
+                    reader.onload = () => r(reader.result);
+                    reader.readAsDataURL(fileInput.files[0]);
+                });
             }
 
-            // Mostrar mensaje del usuario
-            box.innerHTML += `
-                <div class="msg-wrapper user-wrapper">
-                    <div class="msg user">${text} ${imageBase64 ? '<br><small style="font-size:0.7rem; opacity:0.8;">📸 Imagen cargada</small>' : ''}</div>
-                </div>`;
-            
+            box.innerHTML += `<div class="msg-wrapper user-wrapper"><div class="msg user">${text}</div></div>`;
             input.value = ''; fileInput.value = ''; updateFileStatus();
             box.scrollTop = box.scrollHeight;
 
@@ -261,25 +235,20 @@
                     body: JSON.stringify({ prompt: text || "Analiza esta imagen", image: imageBase64 })
                 });
                 const data = await res.json();
-                
                 box.innerHTML += `
                     <div class="msg-wrapper">
                         <div class="avatar">
-                            <svg class="shuttle-icon" style="width:20px; height:20px;" viewBox="0 0 24 24">
-                                <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
+                            <svg class="shuttle-svg" style="width:24px; height:24px;" viewBox="0 0 24 24">
+                                <path d="M12 2L9 7h6l-3-5z M8 8h8l-1 7h-6l-1-7z M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4z"/>
                             </svg>
                         </div>
-                        <div class="msg bot">
-                            <b>Airi Sense · ProvenFray</b>
-                            ${data.text}
-                        </div>
+                        <div class="msg bot"><b>Airi Sense · ProvenFray</b>${data.text}</div>
                     </div>`;
             } catch (e) {
-                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:40px;">Airi está ajustando su raqueta... Error de conexión.</div>`;
+                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b;">Error de conexión.</div>`;
             }
             box.scrollTop = box.scrollHeight;
         }
-
         document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') enviar(); });
     </script>
 </body>
