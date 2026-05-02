@@ -6,45 +6,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIRI SENSE - PROVENFRAY</title>
     <style>
-        :root { --primary: #ffd700; --bg: #1a1a1a; --card: #262626; --text: #eee; }
+        :root { 
+            --primary: #ffd700; 
+            --bg: #1a1a1a; 
+            --card: #262626; 
+            --text: #eee; 
+            --bot-bubble: #333;
+        }
         
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: var(--bg); display: flex; flex-direction: column; height: 100vh; color: #fff; overflow: hidden; }
+        /* Reset y Estructura Base */
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            background-color: var(--bg); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            color: #fff; 
+            overflow: hidden; 
+        }
         
-        /* CABECERA */
-        .header { background: #000; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
-        .header h1 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+        /* CABECERA PROFESIONAL */
+        .header { 
+            background: #000; 
+            padding: 10px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        .header h1 { 
+            margin: 0; 
+            font-size: 1rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-weight: 900;
+        }
         
-        /* BOTÓN GHOST */
-        .btn-torneos { border: 2px solid var(--primary); color: var(--primary); padding: 6px 14px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; transition: 0.3s; }
+        /* BOTÓN GHOST (Gestión) */
+        .btn-torneos { 
+            border: 1.5px solid var(--primary); 
+            color: var(--primary); 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            transition: 0.3s;
+        }
         .btn-torneos:hover { background: var(--primary); color: #000; }
 
-        /* CONTENEDOR CHAT */
-        #chat-container { flex: 1; display: flex; flex-direction: column; max-width: 900px; margin: 10px auto; width: 95%; background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #1f1f1f; }
+        /* CONTENEDOR PRINCIPAL DEL CHAT */
+        #chat-container { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            max-width: 800px; 
+            margin: 10px auto; 
+            width: 95%; 
+            background: var(--card); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        /* CAJA DE MENSAJES */
+        #chat-box { 
+            flex: 1; 
+            padding: 20px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            background: #1f1f1f; 
+        }
         
-        /* MENSAJES E INTERLINEADO COMPACTO */
-        .avatar { width: 32px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .msg-wrapper { display: flex; align-items: flex-start; max-width: 88%; gap: 10px; }
+        /* ICONO DEL VOLANTE (SVG) */
+        .shuttle-icon { 
+            width: 24px; 
+            height: 24px; 
+            fill: var(--primary); 
+            transform: rotate(-15deg);
+        }
+
+        /* BURBUJAS DE MENSAJE E INTERLINEADO COMPACTO */
+        .avatar { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .msg-wrapper { display: flex; align-items: flex-start; max-width: 90%; gap: 10px; }
         .msg-wrapper.user-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
-        .msg { padding: 12px 18px; border-radius: 15px; font-size: 0.92rem; line-height: 1.25; white-space: pre-wrap; }
-        .bot { background: #333; color: var(--text); border-top-left-radius: 2px; }
+        .msg { 
+            padding: 10px 16px; 
+            border-radius: 15px; 
+            font-size: 0.92rem; 
+            line-height: 1.15; /* Interlineado compacto solicitado */
+            white-space: pre-wrap; 
+            word-wrap: break-word;
+        }
+        .bot { background: var(--bot-bubble); color: var(--text); border-top-left-radius: 2px; }
         
-        /* Títulos de sección compactos */
-        .bot b { color: var(--primary); display: inline-block; margin-top: 6px; margin-bottom: 2px; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--primary); }
-        .user { background: var(--primary); color: #000; border-top-right-radius: 2px; font-weight: 600; }
+        /* Subtítulos dentro de la respuesta de la IA */
+        .bot b { 
+            color: var(--primary); 
+            display: inline-block; 
+            margin-top: 5px; 
+            margin-bottom: 2px; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid var(--primary); 
+        }
+        
+        .user { background: var(--primary); color: #000; border-top-right-radius: 2px; font-weight: 700; }
 
-        /* INPUT AREA */
-        .input-area { padding: 15px 20px; background: var(--card); display: flex; gap: 10px; border-top: 1px solid #333; align-items: center; }
-        input[type="text"] { flex: 1; padding: 12px 20px; border: 1px solid #444; border-radius: 30px; outline: none; background: #1a1a1a; color: white; font-size: 0.95rem; }
-        .btn-action { background: var(--primary); color: #000; border: none; height: 44px; border-radius: 30px; cursor: pointer; font-weight: 800; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-        .btn-send { padding: 0 25px; font-size: 0.85rem; }
-        .btn-file { width: 44px; font-size: 1.1rem; background: #444; color: #fff; }
-        .btn-file.active { background: #4caf50; }
+        /* ÁREA DE ENTRADA */
+        .input-area { 
+            padding: 15px; 
+            background: var(--card); 
+            display: flex; 
+            gap: 10px; 
+            border-top: 1px solid #333; 
+            align-items: center;
+        }
+        input[type="text"] { 
+            flex: 1; 
+            padding: 12px 20px; 
+            border: 1px solid #444; 
+            border-radius: 25px; 
+            outline: none; 
+            background: #1a1a1a; 
+            color: white; 
+            font-size: 0.95rem; 
+        }
+        input:focus { border-color: var(--primary); }
+        
+        .btn-action { 
+            background: var(--primary); 
+            color: #000; 
+            border: none; 
+            height: 42px; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: 800; 
+            transition: 0.2s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .btn-send { padding: 0 20px; text-transform: uppercase; font-size: 0.8rem; }
+        .btn-file { width: 42px; font-size: 1.1rem; background: #444; color: #fff; }
+        .btn-file.active { background: #4caf50; color: white; border: none; }
+        .btn-action:hover { opacity: 0.9; transform: scale(1.02); }
 
-        /* SVG DEL VOLANTE */
-        .shuttle-svg { width: 28px; height: 28px; fill: var(--primary); }
-
+        /* Scrollbar Personalizada */
         #chat-box::-webkit-scrollbar { width: 4px; }
         #chat-box::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
     </style>
@@ -53,27 +172,123 @@
 
     <div class="header">
         <h1>
-            <svg class="shuttle-svg" viewBox="0 0 24 24"><path d="M11,2V3.07C7.3,3.55 4,6.47 4,10.5C4,12.35 4.71,14.04 5.86,15.31L4,21C4,21 6.5,20.5 7.5,19.5C8,19 8.5,18 8.5,18L10.3,18.84C10.83,19.08 11.41,19.21 12,19.21C12.59,19.21 13.17,19.08 13.7,18.84L15.5,18C15.5,18 16,19 16.5,19.5C17.5,20.5 20,21 20,21L18.14,15.31C19.29,14.04 20,12.35 20,10.5C20,6.47 16.7,3.55 13,3.07V2H11M12,5C14.76,5 17,7.24 17,10C17,10.38 16.96,10.75 16.88,11.12L12,9L7.12,11.12C7.04,10.75 7,10.38 7,10C7,7.24 9.24,5 12,5Z"/></svg>
+            <svg class="shuttle-icon" viewBox="0 0 24 24">
+                <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
+            </svg>
             Airi Sense · ProvenFray
         </h1>
-        <a href="#" class="btn-torneos">🏆 Torneos</a>
+        <a href="https://ais-pre-xchgvzau5r7yabzznk57xq-422275897046.europe-west2.run.app/" target="_blank" class="btn-torneos">
+            🏆 Torneos
+        </a>
     </div>
 
     <div id="chat-container">
         <div id="chat-box">
             <div class="msg-wrapper">
                 <div class="avatar">
-                    <svg class="shuttle-svg" style="width:22px; height:22px;" viewBox="0 0 24 24"><path d="M11,2V3.07C7.3,3.55 4,6.47 4,10.5C4,12.35 4.71,14.04 5.86,15.31L4,21C4,21 6.5,20.5 7.5,19.5C8,19 8.5,18 8.5,18L10.3,18.84C10.83,19.08 11.41,19.21 12,19.21C12.59,19.21 13.17,19.08 13.7,18.84L15.5,18C15.5,18 16,19 16.5,19.5C17.5,20.5 20,21 20,21L18.14,15.31C19.29,14.04 20,12.35 20,10.5C20,6.47 16.7,3.55 13,3.07V2H11M12,5C14.76,5 17,7.24 17,10C17,10.38 16.96,10.75 16.88,11.12L12,9L7.12,11.12C7.04,10.75 7,10.38 7,10C7,7.24 9.24,5 12,5Z"/></svg>
+                    <svg class="shuttle-icon" style="width:18px; height:18px;" viewBox="0 0 24 24">
+                        <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
+                    </svg>
                 </div>
                 <div class="msg bot">
                     <b>Airi Sense · ProvenFray</b>
                     ¡Hola! Soy tu zona de entrenamiento inteligente. 🏸
-                    Lista para analizar tu técnica y tus fotos.
+                    Lista para analizar tu técnica y tus fotos. <br>
+                    ¿Qué quieres mejorar hoy?
                 </div>
             </div>
         </div>
         
         <div class="input-area">
             <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="updateFileStatus()">
-            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()">📎</button>
-            <input type="text" id="userInput" placeholder="Pregunta o envía una
+            <button class="btn-action btn-file" id="fileBtn" onclick="document.getElementById('imageInput').click()" title="Subir foto técnica">📎</button>
+            
+            <input type="text" id="userInput" placeholder="Escribe tu duda o sube una foto...">
+            <button class="btn-action btn-send" onclick="enviar()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // Actualiza el botón de adjuntar cuando hay un archivo
+        function updateFileStatus() {
+            const input = document.getElementById('imageInput');
+            const btn = document.getElementById('fileBtn');
+            if (input.files.length > 0) {
+                btn.classList.add('active');
+                btn.innerHTML = '✔';
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '📎';
+            }
+        }
+
+        // Convierte imagen a formato que la IA entiende
+        function toBase64(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+            });
+        }
+
+        async function enviar() {
+            const input = document.getElementById('userInput');
+            const fileInput = document.getElementById('imageInput');
+            const box = document.getElementById('chat-box');
+            
+            if(!input.value.trim() && fileInput.files.length === 0) return;
+
+            const text = input.value;
+            let imageBase64 = null;
+
+            if (fileInput.files.length > 0) {
+                imageBase64 = await toBase64(fileInput.files[0]);
+            }
+
+            // Mostrar mensaje del usuario
+            box.innerHTML += `
+                <div class="msg-wrapper user-wrapper">
+                    <div class="msg user">${text} ${imageBase64 ? '<br><small style="font-size:0.7rem; opacity:0.8;">📸 Imagen cargada</small>' : ''}</div>
+                </div>`;
+            
+            // Limpiar y hacer scroll
+            input.value = '';
+            fileInput.value = '';
+            updateFileStatus();
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompt: text || "Analiza esta imagen de bádminton", 
+                        image: imageBase64 
+                    })
+                });
+                const data = await res.json();
+                
+                // Mostrar respuesta de Airi con su icono de volante
+                box.innerHTML += `
+                    <div class="msg-wrapper">
+                        <div class="avatar">
+                            <svg class="shuttle-icon" style="width:18px; height:18px;" viewBox="0 0 24 24">
+                                <path d="M12,2L10,5L11,13L7,5L4,6L9,15L11,16L12,22L13,16L15,15L20,6L17,5L13,13L14,5L12,2Z"/>
+                            </svg>
+                        </div>
+                        <div class="msg bot">
+                            <b>Airi Sense · ProvenFray</b>
+                            ${data.text}
+                        </div>
+                    </div>`;
+            } catch (e) {
+                box.innerHTML += `<div class="msg bot" style="color:#ff6b6b; margin-left:40px;">Error de conexión con la pista.</div>`;
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // Enviar con tecla Enter
+        document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') enviar(); });
+    </script>
+</body>
+</html>
