@@ -1,35 +1,33 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// Inicialización del motor de Airi Sense
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Ahora usamos el nombre exacto que tienes en Vercel
+const apiKey = process.env.GOOGLE_API_KEY;
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 module.exports = async (req, res) => {
-  // Solo permitimos peticiones POST para seguridad
-  if (req.method !== 'POST') return res.status(405).send('Método no permitido');
+  if (req.method !== 'POST') return res.status(405).send('Solo POST');
+
+  if (!genAI) {
+    return res.status(500).json({ 
+      text: "⚠️ **Error**: No se encuentra la llave 'GOOGLE_API_KEY' en Vercel." 
+    });
+  }
 
   const { prompt, file, mimeType } = req.body;
 
   try {
-    // CAMBIO CLAVE: Usamos gemini-1.5-flash (compatible con texto, imagen y vídeo)
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const promptPrincipal = prompt || "Analiza técnicamente este contenido de bádminton.";
     const displayParts = [promptPrincipal];
 
-    // Lógica para adjuntos (Fotos o Vídeos)
     if (file && mimeType) {
-      // Limpiamos el base64 por si acaso
       const base64Data = file.includes(',') ? file.split(',')[1] : file;
-      
       displayParts.push({
-        inlineData: {
-          data: base64Data,
-          mimeType: mimeType
-        }
+        inlineData: { data: base64Data, mimeType: mimeType }
       });
     }
 
-    // Generar respuesta
     const result = await model.generateContent(displayParts);
     const response = await result.response;
     const text = response.text();
@@ -37,10 +35,9 @@ module.exports = async (req, res) => {
     return res.status(200).json({ text: text });
 
   } catch (error) {
-    console.error("Error técnico en Airi:", error);
-    // Mensaje de error detallado para saber qué falla exactamente
+    console.error("Error en Airi:", error);
     return res.status(500).json({ 
-      text: "Airi ha tenido un problema técnico: " + error.message + ". Por favor, inténtalo de nuevo." 
+      text: "Airi ha tenido un problema técnico: " + error.message
     });
   }
 };
