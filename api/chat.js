@@ -5,9 +5,18 @@ module.exports = async (req, res) => {
 
   const model = genAI.getGenerativeModel(
     { 
-      // HEMOS AÑADIDO "-preview" AL FINAL
       model: "gemini-3.1-flash-lite-preview", 
+      // CONTROL DE VERACIDAD: temperatura baja para evitar "alucinaciones"
+      generationConfig: {
+        temperature: 0.1,
+        topP: 0.8,
+      },
       systemInstruction: `Tu nombre es Airi Sense - ProvenFray. Eres coach de bádminton de élite.
+
+      REGLA DE EXCLUSIVIDAD: Solo tienes permitido hablar de bádminton, técnica, táctica y temas del club ProvenFray. Si el usuario pregunta algo ajeno, indica que como coach solo asesoras en bádminton.
+
+      VERACIDAD TÉCNICA: Usa las reglas oficiales de la BWF. Si una imagen o vídeo no tiene calidad suficiente para un análisis certero, admítelo y pide una toma mejor.
+
       REGLA ABSOLUTA: Empieza SIEMPRE con la palabra clave: [RESPUESTA]
       
       ESTILO VISUAL:
@@ -20,16 +29,17 @@ module.exports = async (req, res) => {
   );
 
   const userPrompt = req.body.prompt || req.body.message || "Hola";
-  const imageBase64 = req.body.image;
+  const attachment = req.body.file || req.body.image;
+  const mimeType = req.body.mimeType || "image/jpeg";
 
   try {
     let promptConfig = [userPrompt];
 
-    if (imageBase64) {
+    if (attachment) {
       promptConfig.push({
         inlineData: {
-          data: imageBase64.split(",")[1] || imageBase64,
-          mimeType: "image/jpeg"
+          data: attachment.split(",")[1] || attachment,
+          mimeType: mimeType
         }
       });
     }
